@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
@@ -40,6 +41,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,6 +49,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -140,7 +143,9 @@ fun MyTextField(labelValue: String, painterResource: Painter) {
         label = { Text(text = labelValue) },
 
         colors = customTextFieldColors,
-        keyboardOptions = KeyboardOptions.Default,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        singleLine= true,
+        maxLines = 1,
         value = textValue.value,
         onValueChange = {
             textValue.value = it
@@ -165,6 +170,9 @@ fun MyTextField(labelValue: String, painterResource: Painter) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordTextField(labelValue: String, painterResource: Painter) {
+
+    val localFocusManager= LocalFocusManager.current
+
     val password = remember {
         mutableStateOf("")
     }
@@ -191,7 +199,12 @@ fun PasswordTextField(labelValue: String, painterResource: Painter) {
             ),
         label = { Text(text = labelValue) },
         colors = customTextFieldColors,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+        singleLine= true,
+        keyboardActions = KeyboardActions {
+            localFocusManager.clearFocus()
+        },
+        maxLines = 1,
         value = password.value,
         onValueChange = {
             password.value = it
@@ -429,6 +442,46 @@ fun ClickableRegisterTextComponent(value: String, onTextSelected: (String) -> Un
                     Log.d("ClickableTextComponent", "{$span.item}")
 
                     if(span.item == loginText){
+                        onTextSelected(span.item)
+                    }
+                }
+        })
+
+}
+
+@Composable
+fun ClickablePasswordTextComponent(value: String, onTextSelected: (String) -> Unit) {
+    val initialText = "¿Olvidaste tu contraseña?"
+    val passwordText = " Ingresa aquí."
+
+    val annotatedString = buildAnnotatedString {
+        withStyle(style = SpanStyle(color = Color.White)) {
+            append(initialText)
+        }
+
+        withStyle(style = SpanStyle(color = colorResource(id = R.color.colorPrimary2))) {
+            pushStringAnnotation(tag = passwordText, annotation = passwordText)
+            append(passwordText)
+        }
+    }
+
+    ClickableText(
+        modifier= Modifier
+            .fillMaxWidth()
+            .heightIn(min = 40.dp),
+        style = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            fontStyle = FontStyle.Normal,
+            textAlign = TextAlign.Center
+        )
+        ,
+        text = annotatedString, onClick = { offset ->
+            annotatedString.getStringAnnotations(offset, offset)
+                .firstOrNull()?.also { span ->
+                    Log.d("ClickableTextComponent", "{$span.item}")
+
+                    if(span.item == passwordText){
                         onTextSelected(span.item)
                     }
                 }

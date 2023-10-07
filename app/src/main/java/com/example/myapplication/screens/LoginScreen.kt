@@ -19,6 +19,7 @@ import com.example.myapplication.R
 import com.example.myapplication.components.ButtonComponent
 import com.example.myapplication.components.CheckboxComponent
 import com.example.myapplication.components.ClickableLoginTextComponent
+import com.example.myapplication.components.ClickablePasswordTextComponent
 import com.example.myapplication.components.ClickableRegisterTextComponent
 import com.example.myapplication.components.DividerTextComponent
 import com.example.myapplication.components.HeadingTextComponent
@@ -58,6 +59,12 @@ fun LoginScreen() {
             painterResource(id = R.drawable.password)
         )
         Spacer(modifier = Modifier.height(30.dp))
+
+        ClickablePasswordTextComponent(value= "" , onTextSelected = {
+
+        })
+        Spacer(modifier = Modifier.height(30.dp))
+
         ButtonComponent(value= stringResource(id = R.string.inicio))
         DividerTextComponent()
 
