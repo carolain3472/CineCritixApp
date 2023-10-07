@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="welcome">Bienvenido,</string>
+    <string name="acount">Crea una cuenta</string>
+    <string name="myFirstName">Nombre completo</string>
+    <string name="apellido">Apellido</string>
+    <string name="email">Email</string>
+    <string name="password">Contraseña</string>
+    <string name="hide">Ocultar contraseña</string>
+    <string name="show">Mostrar contraseña</string>
+    <string name="politica">A continuación aceptas nuestra politica de datos</string>
+    <string name="terminosCondiciones">Términos y condiciones de uso</string>
+    <string name="registro">Registrate</string>
+
+    //String Resource para iniciar sesión
+    <string name="login">Inicia Sesión</string>
+    <string name="inicio">Iniciar sesión</string>
+
+</resources>
