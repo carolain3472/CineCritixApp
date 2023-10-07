@@ -26,6 +26,7 @@ import com.example.myapplication.components.HeadingTextComponent
 import com.example.myapplication.components.MyTextField
 import com.example.myapplication.components.NormalTextComponent
 import com.example.myapplication.components.PasswordTextField
+import com.example.myapplication.data.UIEvent
 import com.example.myapplication.navigation.CineCritixAppRouter
 import com.example.myapplication.navigation.Screen
 import com.example.myapplication.navigation.SystemBackButtonHandler
@@ -51,13 +52,22 @@ fun LoginScreen() {
         Spacer(modifier = Modifier.height(30.dp))
         MyTextField(
             labelValue = stringResource(id = R.string.email),
-            painterResource(id = R.drawable.email)
+            painterResource(id = R.drawable.email),
+            onTextSelected = {
+
+            }
         )
+        
         Spacer(modifier = Modifier.height(30.dp))
+
         PasswordTextField(
             labelValue = stringResource(id = R.string.password),
-            painterResource(id = R.drawable.password)
+            painterResource(id = R.drawable.password),
+            onTextSelected = {
+
+            }
         )
+
         Spacer(modifier = Modifier.height(30.dp))
 
         ClickablePasswordTextComponent(value= "" , onTextSelected = {
@@ -65,7 +75,9 @@ fun LoginScreen() {
         })
         Spacer(modifier = Modifier.height(30.dp))
 
-        ButtonComponent(value= stringResource(id = R.string.inicio))
+        ButtonComponent(value= stringResource(id = R.string.inicio),onButtonClicked = {
+
+        })
         DividerTextComponent()
 
         ClickableRegisterTextComponent(value= "" , onTextSelected = {

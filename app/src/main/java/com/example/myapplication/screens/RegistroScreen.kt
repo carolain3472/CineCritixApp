@@ -16,6 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.R
 import com.example.myapplication.components.ButtonComponent
 import com.example.myapplication.components.CheckboxComponent
@@ -25,12 +27,14 @@ import com.example.myapplication.components.NormalTextComponent
 import com.example.myapplication.components.HeadingTextComponent
 import com.example.myapplication.components.MyTextField
 import com.example.myapplication.components.PasswordTextField
+import com.example.myapplication.data.LoginViewModel
+import com.example.myapplication.data.UIEvent
 import com.example.myapplication.navigation.CineCritixAppRouter
 import com.example.myapplication.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistroScreen() {
+fun RegistroScreen(loginViewModel: LoginViewModel = viewModel()) {
 
 
     Surface(
@@ -49,24 +53,40 @@ fun RegistroScreen() {
             NormalTextComponent(value = stringResource(id = R.string.welcome))
             HeadingTextComponent(value = stringResource(id = R.string.acount))
             Spacer(modifier= Modifier.height(20.dp))
-            MyTextField(labelValue= stringResource(id = R.string.myFirstName), painterResource(id = R.drawable.profile))
+
+            MyTextField(labelValue= stringResource(id = R.string.myFirstName), painterResource(id = R.drawable.profile),
+               onTextSelected = {
+                   loginViewModel.onEvent(UIEvent.FirstNameChanged(it))
+               } )
             Spacer(modifier = Modifier.height(10.dp))
+
             MyTextField(
                 labelValue = stringResource(id = R.string.email),
-                painterResource(id = R.drawable.email)
+                painterResource(id = R.drawable.email),
+                onTextSelected = {
+                    loginViewModel.onEvent(UIEvent.EmailChanged(it))
+                }
             )
+
             Spacer(modifier = Modifier.height(10.dp))
+
             PasswordTextField(
                 labelValue = stringResource(id = R.string.password),
-                painterResource(id = R.drawable.password)
+                painterResource(id = R.drawable.password),
+                onTextSelected = {
+                    loginViewModel.onEvent(UIEvent.PasswordChanged(it))
+                }
             )
+
             Spacer(modifier = Modifier.height(10.dp))
             CheckboxComponent(value = stringResource(id = R.string.politica), onTextSelected = {
                 CineCritixAppRouter.navigateTo(Screen.TerminosCondicionesScreen)
             })
 
             Spacer(modifier = Modifier.height(25.dp))
-            ButtonComponent(value= stringResource(id = R.string.registro))
+            ButtonComponent(value= stringResource(id = R.string.registro), onButtonClicked = {
+                loginViewModel.onEvent(UIEvent.RegisterButtonClicked)
+            })
             DividerTextComponent()
 
             ClickableLoginTextComponent(value= "" , onTextSelected = {
