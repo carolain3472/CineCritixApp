@@ -137,11 +137,7 @@ fun MyTextField(labelValue: String, painterResource: Painter,
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(5.dp)
-            .clip(shape = RoundedCornerShape(4.dp))
-            .border(
-                width = 1.dp, // Ancho del borde
-                color = colorResource(id = R.color.borde) // Color del borde
-            ),
+            .clip(shape = RoundedCornerShape(4.dp)),
 
         label = { Text(text = labelValue) },
 
@@ -199,11 +195,8 @@ fun PasswordTextField(labelValue: String, painterResource: Painter,
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(shape = RoundedCornerShape(4.dp))
-            .border(
-                width = 1.dp, // Ancho del borde
-                color = colorResource(id = R.color.borde) // Color del borde
-            ),
+            .clip(shape = RoundedCornerShape(4.dp)),
+
         label = { Text(text = labelValue) },
         colors = customTextFieldColors,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
