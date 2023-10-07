@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.TextToolbarStatus
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -118,7 +119,8 @@ fun HeadingTextComponentBlack(value:String){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTextField(labelValue: String, painterResource: Painter,
-                onTextSelected: (String) -> Unit) {
+                onTextSelected: (String) -> Unit,
+                errorStatus :Boolean = false) {
     val textValue = remember {
         mutableStateOf("")
     }
@@ -164,7 +166,8 @@ fun MyTextField(labelValue: String, painterResource: Painter,
                 )
             }
 
-}
+},
+        isError= !errorStatus
     )
 }
 
@@ -172,7 +175,8 @@ fun MyTextField(labelValue: String, painterResource: Painter,
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordTextField(labelValue: String, painterResource: Painter,
-                      onTextSelected: (String) -> Unit) {
+                      onTextSelected: (String) -> Unit,
+                      errorStatus :Boolean = false) {
 
     val localFocusManager= LocalFocusManager.current
 
@@ -246,7 +250,8 @@ fun PasswordTextField(labelValue: String, painterResource: Painter,
                 Icon(painter = iconPainter, contentDescription = description)
             }
         },
-        visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation()
+        visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
+        isError= !errorStatus
 
 
 

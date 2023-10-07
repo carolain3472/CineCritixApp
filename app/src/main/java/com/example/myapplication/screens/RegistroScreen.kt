@@ -57,7 +57,8 @@ fun RegistroScreen(loginViewModel: LoginViewModel = viewModel()) {
             MyTextField(labelValue= stringResource(id = R.string.myFirstName), painterResource(id = R.drawable.profile),
                onTextSelected = {
                    loginViewModel.onEvent(UIEvent.FirstNameChanged(it))
-               } )
+               },
+                errorStatus= loginViewModel.registrationIUState.value.nameError)
             Spacer(modifier = Modifier.height(10.dp))
 
             MyTextField(
@@ -65,7 +66,9 @@ fun RegistroScreen(loginViewModel: LoginViewModel = viewModel()) {
                 painterResource(id = R.drawable.email),
                 onTextSelected = {
                     loginViewModel.onEvent(UIEvent.EmailChanged(it))
-                }
+                },
+                errorStatus= loginViewModel.registrationIUState.value.emailError
+
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -75,7 +78,8 @@ fun RegistroScreen(loginViewModel: LoginViewModel = viewModel()) {
                 painterResource(id = R.drawable.password),
                 onTextSelected = {
                     loginViewModel.onEvent(UIEvent.PasswordChanged(it))
-                }
+                },
+                errorStatus = loginViewModel.registrationIUState.value.passwordError
             )
 
             Spacer(modifier = Modifier.height(10.dp))
