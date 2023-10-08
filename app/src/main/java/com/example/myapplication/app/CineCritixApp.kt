@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.myapplication.navigation.CineCritixAppRouter
 import com.example.myapplication.navigation.Screen
+import com.example.myapplication.screens.HomeScreen
 import com.example.myapplication.screens.LoginScreen
 import com.example.myapplication.screens.RegistroScreen
 import com.example.myapplication.screens.TerminosCondicionesScreen
@@ -29,6 +30,10 @@ fun CineCritixApp(){
                 }
                 is Screen.Login -> {
                     LoginScreen()
+                }
+
+                is Screen.HomeScreen ->{
+                    HomeScreen()
                 }
             }
             

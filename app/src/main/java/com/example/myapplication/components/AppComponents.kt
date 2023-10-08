@@ -22,10 +22,12 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -252,7 +254,11 @@ fun PasswordTextField(labelValue: String, painterResource: Painter,
 }
 
 @Composable
-fun CheckboxComponent(value: String, onTextSelected: (String) -> Unit){
+fun CheckboxComponent(
+    value: String,
+    onTextSelected: (String) -> Unit,
+    onCheckedChange: (Boolean) -> Unit){
+
     Row(modifier= Modifier
         .fillMaxWidth()
         .heightIn(56.dp),
@@ -262,10 +268,14 @@ fun CheckboxComponent(value: String, onTextSelected: (String) -> Unit){
         val checkedState = remember{
             mutableStateOf(false)
         }
-        Checkbox(checked= checkedState.value,
+
+        Checkbox(
+            checked= checkedState.value,
             onCheckedChange= {
-                checkedState.value != checkedState.value
-            })
+                checkedState.value = !checkedState.value
+                onCheckedChange.invoke(it)
+            }
+            )
 
         ClickableTextComponent(value= value, onTextSelected)
 
@@ -312,13 +322,14 @@ fun ClickableTextComponent(value: String, onTextSelected: (String) -> Unit) {
 }
 
 @Composable
-fun ButtonComponent(value: String, onButtonClicked : () -> Unit){
+fun ButtonComponent(value: String, onButtonClicked : () -> Unit, isEnabled: Boolean= false){
     Button(onClick = {onButtonClicked.invoke() },
     modifier = Modifier
         .fillMaxWidth()
         .heightIn(20.dp),
         contentPadding = PaddingValues(),
-        colors= ButtonDefaults.buttonColors(Color.Transparent)
+        colors= ButtonDefaults.buttonColors(Color.Transparent),
+        enabled= isEnabled
     ){
         Box(modifier = Modifier
             .fillMaxWidth()

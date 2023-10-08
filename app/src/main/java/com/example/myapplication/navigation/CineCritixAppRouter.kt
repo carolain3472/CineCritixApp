@@ -7,6 +7,7 @@ sealed class Screen(){
     object RegistroScreen: Screen()
     object TerminosCondicionesScreen: Screen()
     object Login: Screen()
+    object HomeScreen : Screen()
 }
 
 object CineCritixAppRouter {
