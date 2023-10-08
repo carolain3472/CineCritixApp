@@ -11,4 +11,6 @@ class LoginCineApp : Application(){
         FirebaseApp.initializeApp(this)
     }
 
+
+
 }
