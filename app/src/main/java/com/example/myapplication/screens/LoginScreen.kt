@@ -1,19 +1,30 @@
 package com.example.myapplication.screens
 
+import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,9 +44,14 @@ import com.example.myapplication.data.UIEventLogin
 import com.example.myapplication.navigation.CineCritixAppRouter
 import com.example.myapplication.navigation.Screen
 import com.example.myapplication.navigation.SystemBackButtonHandler
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 
+private val TAG= "LOGIIN SCREEN"
 @Composable
 fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
+
+    val viewModel = LoginViewModel()
+    val user = rememberUpdatedState(viewModel.userLiveData.value).value
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -57,7 +73,12 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
                 Spacer(modifier = Modifier.height(25.dp))
                 NormalTextComponent(value = stringResource(id = R.string.welcome))
                 HeadingTextComponent(value = stringResource(id = R.string.login))
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(20.dp))
+
+                SignInButton(viewModel)
+
+                Spacer(modifier = Modifier.height(20.dp))
+
                 MyTextField(
                     labelValue = stringResource(id = R.string.email),
                     painterResource(id = R.drawable.email),
@@ -84,7 +105,9 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
                 ClickablePasswordTextComponent(value = "", onTextSelected = {
 
                 })
+
                 Spacer(modifier = Modifier.height(30.dp))
+
 
                 ButtonComponent(
                     value = stringResource(id = R.string.inicio), onButtonClicked = {
@@ -92,6 +115,9 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
                     },
                     isEnabled = loginViewModel.allValidationPassed.value
                 )
+
+
+
                 DividerTextComponent()
 
                 ClickableRegisterTextComponent(value = "", onTextSelected = {
@@ -109,6 +135,54 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
         }
     }
 }
+
+
+@Composable
+fun SignInButton(viewModel: LoginViewModel) {
+    val user = rememberUpdatedState(viewModel.userLiveData.value).value
+    val context = LocalContext.current
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Button(
+            onClick = {
+                viewModel.signInWithGoogle(context as Activity)
+                val account = GoogleSignIn.getLastSignedInAccount(context)
+                //updateUI(account)
+                if (account != null) {
+                    //val displayName = account.displayName // Obtener el nombre del usuario
+                    val email = account.email // Obtener el correo electrónico del usuario
+                    //val photoUrl = account.photoUrl // Obtener la URL de la foto de perfil del usuario
+                    CineCritixAppRouter.navigateTo(Screen.HomeScreen)
+                    Log.e(TAG, email.toString())
+                }
+            },
+            enabled = user == null,
+            modifier = Modifier
+                .size(width = 100.dp, height = 25.dp)
+                .fillMaxWidth()
+                .heightIn(20.dp),
+            contentPadding = PaddingValues(),
+            colors = ButtonDefaults.buttonColors(Color.Transparent)
+
+
+        ) {
+
+            Image(
+                painter = painterResource(id = R.drawable.google),
+                contentDescription = null,
+                alignment = Alignment.Center
+            )
+
+
+        }
+
+    }
+}
+
 
 
 @Preview

@@ -1,12 +1,21 @@
 package com.example.myapplication.data
 
+import android.app.Activity
+import android.content.Intent
 import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myapplication.data.rules.Validator
 import com.example.myapplication.navigation.CineCritixAppRouter
 import com.example.myapplication.navigation.Screen
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+
 
 class LoginViewModel : ViewModel() {
 
@@ -17,6 +26,14 @@ class LoginViewModel : ViewModel() {
     var allValidationPassed = mutableStateOf(false)
 
     var loginInProgress = mutableStateOf(false)
+
+    val RC_SIGN_IN = 400
+
+    val userLiveData = MutableLiveData<GoogleSignInAccount?>()
+
+    var launcher: ActivityResultLauncher<Intent>? = null
+
+
 
     fun onEvent(event:UIEventLogin){
         when(event){
@@ -91,6 +108,38 @@ class LoginViewModel : ViewModel() {
 
             }
 
+    }
+
+    fun signInWithGoogle(activity: Activity) {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+
+        val googleSignInClient = GoogleSignIn.getClient(activity, gso)
+        val signInIntent = googleSignInClient.signInIntent
+        activity.startActivityForResult(signInIntent, RC_SIGN_IN)
+        //handleSignInResult(signInIntent)
+
+        // Check for existing Google Sign In account, if the user is already signed in
+// the GoogleSignInAccount will be non-null.
+        // Check for existing Google Sign In account, if the user is already signed in
+// the GoogleSignInAccount will be non-null.
+
+    }
+
+
+
+
+    fun handleSignInResult(data: Intent) {
+        val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            // Aquí 'account' contiene la cuenta de Google
+            // Puedes hacer lo que necesites con la cuenta (por ejemplo, obtener el nombre o el correo electrónico)
+        } catch (e: ApiException) {
+            // Aquí puedes manejar cualquier error que ocurra durante el inicio de sesión
+            Log.e(TAG, "Error al iniciar sesión con Google: ${e.message}")
+        }
     }
 
 }
