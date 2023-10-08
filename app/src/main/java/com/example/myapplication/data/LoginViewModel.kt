@@ -1,81 +1,96 @@
 package com.example.myapplication.data
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.myapplication.data.rules.Validator
+import com.example.myapplication.navigation.CineCritixAppRouter
+import com.example.myapplication.navigation.Screen
+import com.google.firebase.auth.FirebaseAuth
 
-class LoginViewModel: ViewModel() {
+class LoginViewModel : ViewModel() {
+
     private val TAG= LoginViewModel::class.simpleName
 
-    var registrationIUState = mutableStateOf(RegistrationIUState())
+    var loginIUState = mutableStateOf(LoginIUState())
 
-    fun onEvent(event:UIEvent){
-        validateDataWithRules()
+    var allValidationPassed = mutableStateOf(false)
+
+    var loginInProgress = mutableStateOf(false)
+
+    fun onEvent(event:UIEventLogin){
         when(event){
-            is UIEvent.FirstNameChanged -> {
-                registrationIUState.value= registrationIUState.value.copy(
-                    firstName= event.firsName
+            is UIEventLogin.EmailChanged -> {
+                loginIUState.value= loginIUState.value.copy(
+                    email= event.email
                 )
-                printState()
             }
 
-            is UIEvent.EmailChanged -> {
-                registrationIUState.value = registrationIUState.value.copy(
-                    email = event.email
+            is UIEventLogin.PasswordChanged -> {
+                loginIUState.value= loginIUState.value.copy(
+                    password= event.password
                 )
-                printState()
+
             }
 
-            is UIEvent.PasswordChanged -> {
-                registrationIUState.value = registrationIUState.value.copy(
-                    password = event.password
-                )
-                printState()
-            }
+            is UIEventLogin.LoginButtonClicked -> {
+                login()
 
-            is UIEvent.RegisterButtonClicked -> {
-                registro()
-            }
 
+            }
         }
+        validateLoginIUDataWithRules()
 
     }
 
-    private fun registro() {
-        Log.d(TAG, "Inside_ signUp")
-        printState()
 
-        validateDataWithRules()
-    }
-
-    private fun validateDataWithRules() {
-        val fNameResult= Validator.validateName(
-            fname= registrationIUState.value.firstName )
-
-        val emailResult= Validator.validateEmail(
-            email = registrationIUState.value.email )
+    private fun validateLoginIUDataWithRules(){
+        val emailResult = Validator.validateEmail(
+            email = loginIUState.value.email
+        )
 
         val passwordResult= Validator.validatePassword(
-            password = registrationIUState.value.password )
-
-        Log.d(TAG, "Inside_validateDataWithRules")
-        Log.d(TAG, "fNameResult= $fNameResult")
-        Log.d(TAG, "emailResult= $emailResult")
-        Log.d(TAG, "passwordResult= $passwordResult")
-
-        registrationIUState.value = registrationIUState.value.copy(
-            nameError = fNameResult.status,
-            emailError = emailResult.status,
-            passwordError = passwordResult.status
+            password= loginIUState.value.password
         )
+
+        loginIUState.value= loginIUState.value.copy(
+            emailError = emailResult.status,
+            passwordError=  passwordResult.status
+        )
+
+        allValidationPassed.value = emailResult.status && passwordResult.status
+
+
     }
 
+    private fun login() {
 
-    private fun printState(){
-        Log.d(TAG, "Inside_printState")
-        Log.d(TAG, registrationIUState.value.toString() )
+        loginInProgress.value = true
+        val email = loginIUState.value.email
+        val password= loginIUState.value.password
+
+        FirebaseAuth
+            .getInstance()
+            .signInWithEmailAndPassword(email,password)
+            .addOnCompleteListener{
+
+                Log.d(TAG, "Inside_Login_Success")
+                Log.d(TAG, "${it.isSuccessful}")
+
+                if(it.isSuccessful){
+                    loginInProgress.value=false
+                    CineCritixAppRouter.navigateTo(Screen.HomeScreen)
+                }
+
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "Inside_login:failure")
+                Log.d(TAG, "${it.localizedMessage}")
+
+
+
+            }
 
     }
+
 }
