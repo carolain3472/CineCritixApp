@@ -5,11 +5,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.example.myapplication.MainScreen
 import com.example.myapplication.navigation.CineCritixAppRouter
 import com.example.myapplication.navigation.Screen
+import com.example.myapplication.screens.FavoriteScreen
 import com.example.myapplication.screens.HomeScreen
 import com.example.myapplication.screens.LoginScreen
 import com.example.myapplication.screens.RegistroScreen
+import com.example.myapplication.screens.ReviewScreen
+import com.example.myapplication.screens.SettingsScreen
 import com.example.myapplication.screens.TerminosCondicionesScreen
 
 @Composable
@@ -32,9 +36,10 @@ fun CineCritixApp(){
                     LoginScreen()
                 }
 
-                is Screen.HomeScreen ->{
-                    HomeScreen()
+                is Screen.MainScreen -> {
+                    MainScreen()
                 }
+
             }
             
         }
