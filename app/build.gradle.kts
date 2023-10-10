@@ -52,6 +52,9 @@ android {
 
 dependencies {
 
+    //Coil - CardSlider
+    implementation("io.coil-kt:coil-compose:2.3.0")
+
     implementation ("com.google.android.gms:play-services-auth:20.7.0")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
@@ -68,6 +71,9 @@ dependencies {
 
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-database-ktx:20.2.2")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.7.4")
+    implementation("com.google.android.engage:engage-core:1.3.0")
+    implementation("androidx.paging:paging-common-android:3.3.0-alpha02")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -75,5 +81,13 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    implementation("com.google.accompanist:accompanist-pager:0.20.0")
+    implementation("androidx.compose.ui:ui:1.0.0")
+    implementation("androidx.compose.ui:ui-tooling:1.0.0")
+    implementation("androidx.compose.foundation:foundation:1.0.0")
+    implementation("androidx.compose.material:material:1.0.0")
+    implementation("androidx.compose.ui:ui-util:1.5.3")
+    implementation("androidx.compose.ui:ui-util-android:1.5.3")
 
 }
