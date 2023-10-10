@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.Color
 import com.example.myapplication.navigation.CineCritixAppRouter
 import com.example.myapplication.navigation.Screen
 import com.example.myapplication.screens.HomeScreen
+import com.example.myapplication.screens.LandInScreen
 import com.example.myapplication.screens.LoginScreen
 import com.example.myapplication.screens.RegistroScreen
 import com.example.myapplication.screens.TerminosCondicionesScreen
@@ -21,6 +22,10 @@ fun CineCritixApp(){
         Crossfade(targetState = CineCritixAppRouter.currentScreen) {
             currentState ->
             when(currentState.value){
+
+                is Screen.LandInScreen -> {
+                    LandInScreen()
+                }
 
                 is Screen.RegistroScreen -> {
                     RegistroScreen()
