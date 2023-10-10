@@ -96,7 +96,7 @@ class LoginViewModel : ViewModel() {
 
                 if(it.isSuccessful){
                     loginInProgress.value=false
-                    CineCritixAppRouter.navigateTo(Screen.HomeScreen)
+                    CineCritixAppRouter.navigateTo(Screen.MainScreen)
                 }
 
             }
