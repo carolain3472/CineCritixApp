@@ -30,6 +30,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import com.example.myapplication.BottomBarScreen
 import com.example.myapplication.R
 import com.example.myapplication.components.ButtonComponent
 import com.example.myapplication.components.ClickablePasswordTextComponent
@@ -141,6 +143,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
 fun SignInButton(viewModel: LoginViewModel) {
     val user = rememberUpdatedState(viewModel.userLiveData.value).value
     val context = LocalContext.current
+    val navController = rememberNavController()
 
     Column(
         modifier = Modifier
@@ -156,7 +159,8 @@ fun SignInButton(viewModel: LoginViewModel) {
                     //val displayName = account.displayName // Obtener el nombre del usuario
                     val email = account.email // Obtener el correo electrónico del usuario
                     //val photoUrl = account.photoUrl // Obtener la URL de la foto de perfil del usuario
-                    CineCritixAppRouter.navigateTo(Screen.HomeScreen)
+                    CineCritixAppRouter.navigateTo(Screen.MainScreen)
+                    //navController.navigate(BottomBarScreen.Home.route)
                     Log.e(TAG, email.toString())
                 }
             },
