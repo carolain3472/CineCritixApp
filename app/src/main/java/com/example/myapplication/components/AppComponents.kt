@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -555,12 +556,31 @@ fun LoginLandInButtonComponent(
     }
 }
 
+@Composable
+fun RegisterLandInButtonComponent(
+    text: String,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .height(35.dp)
+            .padding(horizontal = 20.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+        contentPadding = PaddingValues(5.dp),
 
+        ) {
+        Text(
+            text = text,
+            fontSize = 15.sp,
+            color = Color.Black,
+        )
+    }
+}
 
 @Composable
 fun CardSlider() {
     Column() {
-        Text (text = "Bienvenidos")
         CarouselCard()
     }
 }
@@ -615,6 +635,32 @@ fun CarouselCard() {
                 Icon(painter = leftarrow, contentDescription = null)
             }
 
+            val titulos = listOf(
+                "Back to the future",
+                "Once upon a time in Hollywood",
+                "Interstellar",
+                "Rocky",
+                "Avengers",
+                "The Dark Knight",
+                "Djando: Unchained",
+                "Kill Bill",
+                "Oppenheimer"
+                )
+
+            val generos = listOf(
+                "Ciencia ficción, Aventura",
+                "Drama, Comedia cinematográfica",
+                "Ciencia ficción, Aventura",
+                "Acción, Drama",
+                "Acción, Aventura, Fantasía",
+                "Acción, Crimen, Aventura",
+                "Western, Acción",
+                "Acción, Artes Marciales, Thriller",
+                "Historia, Suspenso, Drama"
+            )
+
+
+
             HorizontalPager(
                 state = pagerState,
                 contentPadding = PaddingValues(horizontal = 65.dp),
@@ -623,35 +669,50 @@ fun CarouselCard() {
                     .weight(1f)
             ) { page ->
                 val pageOffset = (pagerState.currentPage - page).absoluteValue
-                val scale = 0.85f + (0.15f * (1f - pageOffset.coerceIn(0, 1)))
+                val scale = 0.85f + (0.15f * (1f - pageOffset.coerceIn(0, 1)));
 
-                Card(
-                    shape = RoundedCornerShape(10.dp),
+                Box(
                     modifier = Modifier
+                        .fillMaxSize()
                         .graphicsLayer() {
-                            scaleX = scale;
-                            scaleY = scale;
-
-                            alpha = lerp(
-                                start = 0.1f,
-                                stop = 1f,
-                                fraction = 1f - pageOffset.coerceIn(0, 1)
-                            )
+                            scaleX = scale
+                            scaleY = scale
+                            alpha = lerp(0.1f, 1f, 1f - pageOffset.coerceIn(0, 1))
                         }
-
                 ) {
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(sliderList[page])
-                            .crossfade(true)
-                            .scale(Scale.FILL)
-                            .build(),
-                        contentDescription = null,
-                        placeholder = painterResource(id = R.drawable.placeholder),
-                        error = painterResource(id = R.drawable.error)
-                    )
+                    // Agregar la imagen dentro del Card
+                    Card(
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(sliderList[page])
+                                .crossfade(true)
+                                .scale(Scale.FILL)
+                                .build(),
+                            contentDescription = null,
+                            placeholder = painterResource(id = R.drawable.placeholder),
+                            error = painterResource(id = R.drawable.error)
+                        )
+                        // Agregar el título y la descripción debajo de la Card
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        ) {
+                            Text(
+                                text = titulos.getOrNull(page) ?: "Título predeterminado",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 15.sp
+                            )
+                            Text(text = generos.getOrNull(page) ?: "Título predeterminado", fontSize = 10.sp)
+                        }
+                    }
                 }
             }
+
             val rightarrow = androidx.compose.ui.res.painterResource(id = R.drawable.rightarrow)
             IconButton(
                 enabled = pagerState.currentPage < pagerState.pageCount-1,
@@ -664,6 +725,9 @@ fun CarouselCard() {
                 Icon(painter = rightarrow, contentDescription = null)
             }
         }
+
+        Spacer(modifier = Modifier.height(15.dp))
+
         Row(
             Modifier
                 .height(40.dp)
@@ -673,6 +737,7 @@ fun CarouselCard() {
             repeat(sliderList.size){it->
                 val color =
                     if (pagerState.currentPage == it) Color.DarkGray else Color.LightGray
+
                 Box(
                     modifier = Modifier
                         .padding(2.dp)
