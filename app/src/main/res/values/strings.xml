@@ -16,6 +16,13 @@
     <string name="login">Inicia Sesión</string>
     <string name="inicio">Iniciar sesión</string>
 
+    <string name="favorite">Favorites</string>
+    <string name="reviews">Reviews</string>
+    <string name="settings">Settings</string>
+    <string name="home">Home</string>
+
+
+
     <string name="web_client_id">550756448190-8id69udk4qmtg9jkrphm7iq82504jlkt.apps.googleusercontent.com</string>
 
 </resources>
