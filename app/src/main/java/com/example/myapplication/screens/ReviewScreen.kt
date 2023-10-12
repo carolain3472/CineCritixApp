@@ -10,12 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.myapplication.components.ButtonComponent
 import com.example.myapplication.components.HeadingTextComponentBlack
 import com.example.myapplication.data.RegistroViewModel
 
 @Composable
-fun ReviewScreen(loginViewModel: RegistroViewModel = viewModel()){
+fun ReviewScreen(navController: NavHostController, loginViewModel: RegistroViewModel = viewModel()){
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -29,11 +30,6 @@ fun ReviewScreen(loginViewModel: RegistroViewModel = viewModel()){
                 .background(color = Color.White)
         ){
             HeadingTextComponentBlack(value = "REVIEWS")
-
-            ButtonComponent(value = "Logout",
-                onButtonClicked = {
-                    loginViewModel.logout() },
-                isEnabled = true)
 
         }
     }
