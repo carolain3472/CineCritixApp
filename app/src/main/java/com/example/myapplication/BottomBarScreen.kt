@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -35,6 +36,12 @@ sealed class BottomBarScreen(
         route = "SETTINGS",
         title = R.string.settings,
         icon = Icons.Default.Settings
+    )
+
+    object Search: BottomBarScreen(
+        route = "SEARCH",
+        title = R.string.search,
+        icon = Icons.Default.Search
     )
 }
 
