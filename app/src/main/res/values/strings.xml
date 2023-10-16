@@ -22,6 +22,14 @@
     <string name="home">Home</string>
     <string name="search">Search</string>
 
+    <string name="salir">Salir</string>
+    <string name="cerrarSesion">Cerrar Sesion</string>
+    <string name="confirmar_salir">Confirmar</string>
+    <string name="cancelar_salir">Cancelar</string>
+
+
+    <string name="inciarLand">Iniciar Sesión</string>
+    <string name="registroLand">Registrate</string>
 
 
     <string name="web_client_id">550756448190-8id69udk4qmtg9jkrphm7iq82504jlkt.apps.googleusercontent.com</string>

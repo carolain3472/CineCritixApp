@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -54,8 +55,8 @@ import com.example.myapplication.navigation.BottomNavGraph
 
 
 @Composable
-fun MainScreen(){
-    val navController = rememberNavController()
+fun MainScreen(navController: NavHostController = rememberNavController()){
+    //val navController = rememberNavController()
     Scaffold (
         topBar = { TopBar(modifier = Modifier.fillMaxWidth(), "Carolain Jimenez", navController) },
         bottomBar = { BottomBar(navController = navController) }
@@ -111,7 +112,7 @@ fun MainScreen(){
                     Icon(
                         imageVector = screen.icon,
                         tint = iconTint,
-                        contentDescription = null,
+                        contentDescription = stringResource(id = screen.title),
                         modifier = Modifier.size(30.dp)
                     )
                 }
@@ -152,7 +153,7 @@ fun TopBar(modifier: Modifier = Modifier, nombre:String, navController: NavHostC
             }) {
                 Icon(
                     imageVector = Icons.Default.ExitToApp,
-                    contentDescription = "Salir")
+                    contentDescription = stringResource(id = R.string.salir))
             }
             Box(modifier = Modifier.shadow(8.dp, shape = MaterialTheme.shapes.medium),){
                 IconButton(
@@ -161,7 +162,7 @@ fun TopBar(modifier: Modifier = Modifier, nombre:String, navController: NavHostC
                     onClick = { navController.navigate(BottomBarScreen.Search.route) }) {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "Buscar")
+                        contentDescription = stringResource(id = BottomBarScreen.Search.title))
                 }
             }
 
@@ -183,7 +184,7 @@ fun TopBar(modifier: Modifier = Modifier, nombre:String, navController: NavHostC
                     showDialog = false
                 },
                 title = {
-                    Text(text = "Cerrar sesión")
+                    Text(text = stringResource(id = R.string.cerrarSesion))
                 },
                 text = {
                     Text(text = "¿Está seguro de que desea cerrar sesión?")
@@ -203,7 +204,7 @@ fun TopBar(modifier: Modifier = Modifier, nombre:String, navController: NavHostC
                             disabledContentColor = Color.White
                         )
                     ) {
-                        Text("Confirmar")
+                        Text( stringResource(id = R.string.confirmar_salir))
                     }
                 },
                 dismissButton = {
@@ -218,7 +219,7 @@ fun TopBar(modifier: Modifier = Modifier, nombre:String, navController: NavHostC
                             disabledContentColor = Color.White
                         )
                     ) {
-                        Text("Cancelar")
+                        Text(stringResource(id = R.string.cancelar_salir))
                     }
                 }
             )
