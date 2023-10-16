@@ -38,6 +38,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.example.myapplication.components.RegisterLandInButtonComponent
 
@@ -81,7 +82,7 @@ fun LandInScreen() {
                     Spacer(modifier = Modifier.height(10.dp))
                     // Agregar un botón para iniciar sesión y redirigir
                     LoginLandInButtonComponent(
-                        text = "Iniciar Sesión",
+                        text = stringResource(id = R.string.inciarLand),
                         onClick = {
                             CineCritixAppRouter.navigateTo(Screen.Login)
                         }
@@ -158,7 +159,7 @@ fun LandInScreen() {
                         Spacer(modifier = Modifier.height(20.dp))
 
                         RegisterLandInButtonComponent(
-                            text = "Registrate",
+                            text = stringResource(id = R.string.registroLand),
                             onClick = {
                                 CineCritixAppRouter.navigateTo(Screen.RegistroScreen)
                             }
