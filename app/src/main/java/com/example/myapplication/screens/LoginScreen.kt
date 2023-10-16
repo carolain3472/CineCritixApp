@@ -72,7 +72,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
                     .background(color = Color.Black)
             ) {
                 Image(painterResource(id = R.drawable.logo), contentDescription = "Logo")
-                Spacer(modifier = Modifier.height(25.dp))
+                Spacer(modifier = Modifier.height(15.dp))
                 NormalTextComponent(value = stringResource(id = R.string.welcome))
                 HeadingTextComponent(value = stringResource(id = R.string.login))
                 Spacer(modifier = Modifier.height(20.dp))
@@ -108,7 +108,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
 
                 })
 
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
 
                 ButtonComponent(
