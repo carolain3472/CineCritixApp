@@ -467,9 +467,9 @@ fun ClickableLoginTextComponent(value: String, onTextSelected: (String) -> Unit)
 }
 
 @Composable
-fun ClickableRegisterTextComponent(value: String, onTextSelected: (String) -> Unit) {
+fun ClickableRegisterTextComponent(value: Int, onTextSelected: (String) -> Unit) {
     val initialText = "¿No tienes ninguna cuenta?"
-    val loginText = " Registrate aquí."
+    val loginText = stringResource(id = value)
 
     val annotatedString = buildAnnotatedString {
         withStyle(style = SpanStyle(color = Color.White)) {
@@ -573,7 +573,7 @@ fun LoginLandInButtonComponent(
 
 @Composable
 fun RegisterLandInButtonComponent(
-    text: String,
+    text: Int,
     onClick: () -> Unit
 ) {
     Button(
@@ -586,7 +586,7 @@ fun RegisterLandInButtonComponent(
 
         ) {
         Text(
-            text = text,
+            text = stringResource(id = text),
             fontSize = 15.sp,
             color = Color.Black,
         )

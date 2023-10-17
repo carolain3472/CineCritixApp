@@ -122,7 +122,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
 
                 DividerTextComponent()
 
-                ClickableRegisterTextComponent(value = "", onTextSelected = {
+                ClickableRegisterTextComponent(value =  R.string.registroLogin, onTextSelected = {
                     CineCritixAppRouter.navigateTo(Screen.RegistroScreen)
                 })
 
