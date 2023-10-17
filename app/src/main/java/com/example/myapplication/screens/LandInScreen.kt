@@ -159,7 +159,7 @@ fun LandInScreen() {
                         Spacer(modifier = Modifier.height(20.dp))
 
                         RegisterLandInButtonComponent(
-                            text = stringResource(id = R.string.registroLand),
+                            text = R.string.registroLand,
                             onClick = {
                                 CineCritixAppRouter.navigateTo(Screen.RegistroScreen)
                             }
