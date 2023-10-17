@@ -3,6 +3,7 @@ package com.example.myapplication.test
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.example.myapplication.R
 import com.example.myapplication.app.CineCritixApp
@@ -13,6 +14,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import kotlin.math.log
 
 class CineCritixAppNavigation {
 
@@ -58,7 +60,7 @@ class CineCritixAppNavigation {
         assertEquals(Screen.Login, currentScreen)
     }
 
-    /*
+
     @Test
     fun testLandScreentoRegisterScreen() {
 
@@ -66,9 +68,21 @@ class CineCritixAppNavigation {
         // Agrega aquí la lógica de verificación para RegistroScreen
         // Por ejemplo, verifica si los elementos de RegistroScreen están presentes
         val currentScreen = CineCritixAppRouter.currentScreen.value
-        assertEquals(Screen.RegistroScreen, currentScreen)
+        assertEquals(Screen.LandInScreen, currentScreen)
     }
-    */
+
+    /*@Test
+    fun testLoginScreentoRegisterScreen() {
+        //navigateTo(Screen.Login)
+        composeTestRule.onNodeWithStringId(R.string.inciarLand).performClick()
+        composeTestRule.onNodeWithText("Registrate aquí.", useUnmergedTree = true).performClick()
+        // Agrega aquí la lógica de verificación para RegistroScreen
+        // Por ejemplo, verifica si los elementos de RegistroScreen están presentes
+        val currentScreen = CineCritixAppRouter.currentScreen.value
+        assertEquals(Screen.RegistroScreen, currentScreen)
+    }*/
+
+
 
 
 
