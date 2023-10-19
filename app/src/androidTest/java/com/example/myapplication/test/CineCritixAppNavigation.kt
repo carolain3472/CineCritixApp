@@ -28,7 +28,7 @@ class CineCritixAppNavigation {
         }
     }
 
-    /*
+    /**
     @Test
     fun testLandInScreen() {
         navigateTo(Screen.LandInScreen)
@@ -39,7 +39,7 @@ class CineCritixAppNavigation {
 
     }*/
 
-    /*
+    /**
     @Test
     fun testRegistroScreen() {
         navigateTo(Screen.RegistroScreen)
@@ -71,7 +71,7 @@ class CineCritixAppNavigation {
         assertEquals(Screen.LandInScreen, currentScreen)
     }
 
-    /*@Test
+    /**@Test
     fun testLoginScreentoRegisterScreen() {
         //navigateTo(Screen.Login)
         composeTestRule.onNodeWithStringId(R.string.inciarLand).performClick()
