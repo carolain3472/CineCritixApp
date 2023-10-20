@@ -28,27 +28,6 @@ class CineCritixAppNavigation {
         }
     }
 
-    /**
-    @Test
-    fun testLandInScreen() {
-        navigateTo(Screen.LandInScreen)
-        // Agrega aquí la lógica de verificación para LandInScreen
-        // Por ejemplo, verifica si los elementos de LandInScreen están presentes
-        val currentScreen = CineCritixAppRouter.currentScreen.value
-        assertEquals(Screen.LandInScreen, currentScreen)
-
-    }*/
-
-    /**
-    @Test
-    fun testRegistroScreen() {
-        navigateTo(Screen.RegistroScreen)
-        // Agrega aquí la lógica de verificación para RegistroScreen
-        // Por ejemplo, verifica si los elementos de RegistroScreen están presentes
-        val currentScreen = CineCritixAppRouter.currentScreen.value
-        assertEquals(Screen.RegistroScreen, currentScreen)
-    }*/
-
 
     @Test
     fun testLandScreentoLoginScreen() {
@@ -60,7 +39,6 @@ class CineCritixAppNavigation {
         assertEquals(Screen.Login, currentScreen)
     }
 
-
     @Test
     fun testLandScreentoRegisterScreen() {
 
@@ -71,20 +49,43 @@ class CineCritixAppNavigation {
         assertEquals(Screen.LandInScreen, currentScreen)
     }
 
-    /**@Test
-    fun testLoginScreentoRegisterScreen() {
-        //navigateTo(Screen.Login)
-        composeTestRule.onNodeWithStringId(R.string.inciarLand).performClick()
-        composeTestRule.onNodeWithText("Registrate aquí.", useUnmergedTree = true).performClick()
-        // Agrega aquí la lógica de verificación para RegistroScreen
-        // Por ejemplo, verifica si los elementos de RegistroScreen están presentes
-        val currentScreen = CineCritixAppRouter.currentScreen.value
-        assertEquals(Screen.RegistroScreen, currentScreen)
-    }*/
-
-
-
-
-
 
 }
+
+
+
+
+
+
+
+/**
+@Test
+fun testLandInScreen() {
+navigateTo(Screen.LandInScreen)
+// Agrega aquí la lógica de verificación para LandInScreen
+// Por ejemplo, verifica si los elementos de LandInScreen están presentes
+val currentScreen = CineCritixAppRouter.currentScreen.value
+assertEquals(Screen.LandInScreen, currentScreen)
+
+}*/
+
+/**
+@Test
+fun testRegistroScreen() {
+navigateTo(Screen.RegistroScreen)
+// Agrega aquí la lógica de verificación para RegistroScreen
+// Por ejemplo, verifica si los elementos de RegistroScreen están presentes
+val currentScreen = CineCritixAppRouter.currentScreen.value
+assertEquals(Screen.RegistroScreen, currentScreen)
+}*/
+
+/**@Test
+fun testLoginScreentoRegisterScreen() {
+//navigateTo(Screen.Login)
+composeTestRule.onNodeWithStringId(R.string.inciarLand).performClick()
+composeTestRule.onNodeWithText("Registrate aquí.", useUnmergedTree = true).performClick()
+// Agrega aquí la lógica de verificación para RegistroScreen
+// Por ejemplo, verifica si los elementos de RegistroScreen están presentes
+val currentScreen = CineCritixAppRouter.currentScreen.value
+assertEquals(Screen.RegistroScreen, currentScreen)
+}*/

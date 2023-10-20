@@ -80,7 +80,7 @@ class LoginViewModel : ViewModel() {
 
     }
 
-    private fun login() {
+    fun login() {
 
         loginInProgress.value = true
         val email = loginIUState.value.email
@@ -103,6 +103,7 @@ class LoginViewModel : ViewModel() {
             .addOnFailureListener {
                 Log.d(TAG, "Inside_login:failure")
                 Log.d(TAG, "${it.localizedMessage}")
+                loginInProgress.value = false
 
 
 
