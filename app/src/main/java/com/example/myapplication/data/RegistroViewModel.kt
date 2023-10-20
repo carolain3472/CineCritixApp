@@ -104,7 +104,7 @@ class RegistroViewModel: ViewModel() {
 
     }
 
-    private fun createUserInFireBase(email:String, password:String){
+    fun createUserInFireBase(email:String, password:String){
         signUpInProgress.value = true
 
         FirebaseAuth
@@ -126,6 +126,7 @@ class RegistroViewModel: ViewModel() {
                 Log.d(TAG, "Inside_OnFailureListener")
                 Log.d(TAG,"Exception =${it.message}")
                 Log.d(TAG,"Exception =${it.localizedMessage}")
+                signUpInProgress.value = false
 
             }
 
