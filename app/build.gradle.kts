@@ -48,6 +48,8 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+
 }
 
 dependencies {
@@ -84,9 +86,12 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    testImplementation ("junit:junit:4.13.2")
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0")
-    testImplementation ("org.mockito:mockito-core:3.11.2")
+    androidTestImplementation("org.mockito:mockito-android:+")
+    androidTestImplementation ("junit:junit:4.13.2")
+    androidTestImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0")
+    testImplementation ("org.mockito:mockito-core:+")
+    androidTestImplementation ("org.powermock:powermock-core:1.7.4")
+    androidTestImplementation ("org.powermock:powermock-module-testng:1.7.4")
 
     implementation("com.google.accompanist:accompanist-pager:0.20.0")
     implementation("androidx.compose.ui:ui:1.0.0")
