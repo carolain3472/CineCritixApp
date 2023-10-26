@@ -15,6 +15,7 @@
     //String Resource para iniciar sesión
     <string name="login">Inicia Sesión</string>
     <string name="inicio">Iniciar sesión</string>
+    <string name="documento">Documento</string>
 
     <string name="favorite">Favorites</string>
     <string name="reviews">Reviews</string>
