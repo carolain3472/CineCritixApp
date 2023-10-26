@@ -8,10 +8,17 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +36,8 @@ import com.example.myapplication.components.NormalTextComponent
 import com.example.myapplication.components.HeadingTextComponent
 import com.example.myapplication.components.MyTextField
 import com.example.myapplication.components.PasswordTextField
+import com.example.myapplication.data.RegisterAPIViewModel
+import com.example.myapplication.data.RegisterCallback
 import com.example.myapplication.data.RegistroViewModel
 import com.example.myapplication.data.UIEventRegistro
 import com.example.myapplication.navigation.CineCritixAppRouter
@@ -36,7 +45,10 @@ import com.example.myapplication.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistroScreen(loginViewModel: RegistroViewModel = viewModel()) {
+fun RegistroScreen(loginViewModel: RegistroViewModel = viewModel(), registerViewModel: RegisterAPIViewModel = viewModel()) {
+
+    var showErrorDialog by remember { mutableStateOf(false) }
+
 
     Box(modifier= Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center) {
@@ -59,11 +71,23 @@ fun RegistroScreen(loginViewModel: RegistroViewModel = viewModel()) {
                 HeadingTextComponent(value = stringResource(id = R.string.acount))
                 Spacer(modifier = Modifier.height(20.dp))
 
+
+                MyTextField(
+                    labelValue = stringResource(id = R.string.documento),
+                    painterResource(id = R.drawable.profile),
+                    onTextSelected = {
+                        registerViewModel.setDocumento(it)
+                    },
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+
                 MyTextField(
                     labelValue = stringResource(id = R.string.myFirstName),
                     painterResource(id = R.drawable.profile),
                     onTextSelected = {
-                        loginViewModel.onEvent(UIEventRegistro.FirstNameChanged(it))
+                        registerViewModel.setNombre(it)
+                        //loginViewModel.onEvent(UIEventRegistro.FirstNameChanged(it))
+
                     },
                     errorStatus = loginViewModel.registrationIUState.value.nameError
                 )
@@ -73,7 +97,9 @@ fun RegistroScreen(loginViewModel: RegistroViewModel = viewModel()) {
                     labelValue = stringResource(id = R.string.email),
                     painterResource(id = R.drawable.email),
                     onTextSelected = {
-                        loginViewModel.onEvent(UIEventRegistro.EmailChanged(it))
+                        registerViewModel.setEmail(it)
+                        //loginViewModel.onEvent(UIEventRegistro.EmailChanged(it))
+
                     },
                     errorStatus = loginViewModel.registrationIUState.value.emailError
 
@@ -85,7 +111,9 @@ fun RegistroScreen(loginViewModel: RegistroViewModel = viewModel()) {
                     labelValue = stringResource(id = R.string.password),
                     painterResource(id = R.drawable.password),
                     onTextSelected = {
-                        loginViewModel.onEvent(UIEventRegistro.PasswordChanged(it))
+                        registerViewModel.setContrasena(it)
+                        //loginViewModel.onEvent(UIEventRegistro.PasswordChanged(it))
+
                     },
                     errorStatus = loginViewModel.registrationIUState.value.passwordError
                 )
@@ -105,9 +133,21 @@ fun RegistroScreen(loginViewModel: RegistroViewModel = viewModel()) {
 
                 ButtonComponent(
                     value = stringResource(id = R.string.registro), onButtonClicked = {
-                        loginViewModel.onEvent(UIEventRegistro.RegisterButtonClicked)
+                        //loginViewModel.onEvent(UIEventRegistro.RegisterButtonClicked)
+                        registerViewModel.register(
+                            object : RegisterCallback{
+
+                                override fun onRegisterResult(success: Boolean) {
+                                    if (success){
+                                        CineCritixAppRouter.navigateTo(Screen.Login)
+                                    }else{
+                                        showErrorDialog = true
+                                    }
+                                }
+                            }
+                        )
                     },
-                    isEnabled = loginViewModel.allValidationPassed.value
+                    isEnabled = true
                 )
                 DividerTextComponent()
 
@@ -116,11 +156,32 @@ fun RegistroScreen(loginViewModel: RegistroViewModel = viewModel()) {
 
                 })
 
+
+
             }
         }
 
         if(loginViewModel.signUpInProgress.value){
             CircularProgressIndicator()
+        }
+
+        //Muestra una ventana emergente si hay algun error al realizar la solicitud
+        if (showErrorDialog) {
+            AlertDialog(
+                onDismissRequest = {
+                    showErrorDialog = false
+                },
+                title = { Text(text = "Error") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showErrorDialog = false
+                        }
+                    ) {
+                        Text(text = "Aceptar")
+                    }
+                }
+            )
         }
 
 
