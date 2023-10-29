@@ -8,7 +8,7 @@ import retrofit2.http.POST
 
 interface WebService {
 
-    @POST("/register")
+    @POST("users/register/")
     suspend fun register(
         @Body usuario: UserRegister
     ): Response<UserResponse>

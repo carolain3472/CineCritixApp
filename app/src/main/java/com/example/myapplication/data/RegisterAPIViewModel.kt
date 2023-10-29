@@ -43,6 +43,11 @@ class RegisterAPIViewModel: ViewModel() {
     fun register(callback: RegisterCallback){
 
         Log.d(TAG, "Hola")
+        Log.d(TAG, _uiStateRegister.value.nombre)
+        Log.d(TAG, _uiStateRegister.value.documento)
+        Log.d(TAG, _uiStateRegister.value.email)
+        Log.d(TAG, _uiStateRegister.value.contrasena)
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
