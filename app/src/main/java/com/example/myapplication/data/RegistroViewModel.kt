@@ -52,6 +52,13 @@ class RegistroViewModel: ViewModel() {
                 )
             }
 
+            is UIEventRegistro.DocumentChanged-> {
+                registrationIUState.value = registrationIUState.value.copy(
+                    doc = event.document
+                )
+                printState()
+            }
+
         }
 
         validateDataWithRules()
@@ -81,6 +88,10 @@ class RegistroViewModel: ViewModel() {
             statusValue = registrationIUState.value.privacyPolicyAccepted
         )
 
+        val document = Validator.validateDoc(
+            doc = registrationIUState.value.doc
+        )
+
         Log.d(TAG, "Inside_validateDataWithRules")
         Log.d(TAG, "fNameResult= $fNameResult")
         Log.d(TAG, "emailResult= $emailResult")
@@ -91,10 +102,11 @@ class RegistroViewModel: ViewModel() {
             nameError = fNameResult.status,
             emailError = emailResult.status,
             passwordError = passwordResult.status,
+            docError = document.status,
             privacyPolicyError = privacyPolicyResult.status
         )
 
-        allValidationPassed.value = fNameResult.status && emailResult.status && passwordResult.status && privacyPolicyResult.status
+        allValidationPassed.value = document.status && fNameResult.status && emailResult.status && passwordResult.status && privacyPolicyResult.status
     }
 
 
