@@ -102,10 +102,12 @@ dependencies {
     implementation("androidx.compose.ui:ui-util-android:1.5.3")
 
 
+
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.google.code.gson:gson:2.10.1")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
+    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 
 
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.05.01"))
