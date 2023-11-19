@@ -26,6 +26,12 @@ object Validator {
         )
     }
 
+    fun validateDoc(doc:String) :ValidationResult{
+        return ValidationResult(
+            (!doc.isNullOrEmpty() &&  doc.length>=5)
+        )
+    }
+
 
 }
 

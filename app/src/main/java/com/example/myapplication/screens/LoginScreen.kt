@@ -14,13 +14,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,7 +47,11 @@ import com.example.myapplication.components.HeadingTextComponent
 import com.example.myapplication.components.MyTextField
 import com.example.myapplication.components.NormalTextComponent
 import com.example.myapplication.components.PasswordTextField
+import com.example.myapplication.data.LoginAPIViewModel
+import com.example.myapplication.data.LoginCallBack
 import com.example.myapplication.data.LoginViewModel
+import com.example.myapplication.data.RegisterAPIViewModel
+import com.example.myapplication.data.RegisterCallback
 import com.example.myapplication.data.UIEventLogin
 import com.example.myapplication.navigation.CineCritixAppRouter
 import com.example.myapplication.navigation.Screen
@@ -50,10 +60,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 
 private val TAG= "LOGIIN SCREEN"
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
+fun LoginScreen(loginViewModel: LoginViewModel = viewModel(), loginAPIViewModel: LoginAPIViewModel = viewModel()) {
 
     val viewModel = LoginViewModel()
     val user = rememberUpdatedState(viewModel.userLiveData.value).value
+    var showErrorDialog by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -86,6 +97,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
                     painterResource(id = R.drawable.email),
                     onTextSelected = {
                         loginViewModel.onEvent(UIEventLogin.EmailChanged(it))
+                        loginAPIViewModel.setEmail(it)
                     },
                     errorStatus = loginViewModel.loginIUState.value.emailError
                 )
@@ -97,6 +109,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
                     painterResource(id = R.drawable.password),
                     onTextSelected = {
                         loginViewModel.onEvent(UIEventLogin.PasswordChanged(it))
+                        loginAPIViewModel.setContrasena(it)
 
                     },
                     errorStatus = loginViewModel.loginIUState.value.passwordError
@@ -113,7 +126,19 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
 
                 ButtonComponent(
                     value = stringResource(id = R.string.inicio), onButtonClicked = {
-                        loginViewModel.onEvent(UIEventLogin.LoginButtonClicked)
+                        //loginViewModel.onEvent(UIEventLogin.LoginButtonClicked)
+                        loginAPIViewModel.login(
+                            object : LoginCallBack {
+
+                                override fun onLoginResult(success: Boolean) {
+                                    if (success){
+                                        CineCritixAppRouter.navigateTo(Screen.MainScreen)
+                                    }else{
+                                        showErrorDialog = true
+                                    }
+                                }
+                            }
+                        )
                     },
                     isEnabled = loginViewModel.allValidationPassed.value
                 )
@@ -134,6 +159,25 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
 
         if(loginViewModel.loginInProgress.value){
             CircularProgressIndicator()
+        }
+
+        //Muestra una ventana emergente si hay algun error al realizar la solicitud
+        if (showErrorDialog) {
+            AlertDialog(
+                onDismissRequest = {
+                    showErrorDialog = false
+                },
+                title = { Text(text = "Error") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showErrorDialog = false
+                        }
+                    ) {
+                        Text(text = "Aceptar")
+                    }
+                }
+            )
         }
     }
 }

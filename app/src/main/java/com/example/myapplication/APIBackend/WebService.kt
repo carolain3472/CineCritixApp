@@ -1,5 +1,7 @@
 package com.example.myapplication.APIBackend
 
+import com.example.myapplication.data.UserLogin
+import com.example.myapplication.data.UserLoginResponse
 import com.example.myapplication.data.UserRegister
 import com.example.myapplication.data.UserResponse
 import retrofit2.Response
@@ -13,6 +15,9 @@ interface WebService {
         @Body usuario: UserRegister
     ): Response<UserResponse>
 
-
+    @POST("users/login/")
+    suspend fun login(
+        @Body usuario: UserLogin
+    ): Response<UserLoginResponse>
 
 }

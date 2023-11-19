@@ -77,7 +77,10 @@ fun RegistroScreen(loginViewModel: RegistroViewModel = viewModel(), registerView
                     painterResource(id = R.drawable.profile),
                     onTextSelected = {
                         registerViewModel.setDocumento(it)
+                        loginViewModel.onEvent(UIEventRegistro.DocumentChanged(it))
                     },
+                    errorStatus = loginViewModel.registrationIUState.value.docError
+
                 )
                 Spacer(modifier = Modifier.height(10.dp))
 
@@ -86,7 +89,7 @@ fun RegistroScreen(loginViewModel: RegistroViewModel = viewModel(), registerView
                     painterResource(id = R.drawable.profile),
                     onTextSelected = {
                         registerViewModel.setNombre(it)
-                        //loginViewModel.onEvent(UIEventRegistro.FirstNameChanged(it))
+                        loginViewModel.onEvent(UIEventRegistro.FirstNameChanged(it))
 
                     },
                     errorStatus = loginViewModel.registrationIUState.value.nameError
@@ -98,7 +101,7 @@ fun RegistroScreen(loginViewModel: RegistroViewModel = viewModel(), registerView
                     painterResource(id = R.drawable.email),
                     onTextSelected = {
                         registerViewModel.setEmail(it)
-                        //loginViewModel.onEvent(UIEventRegistro.EmailChanged(it))
+                        loginViewModel.onEvent(UIEventRegistro.EmailChanged(it))
 
                     },
                     errorStatus = loginViewModel.registrationIUState.value.emailError
@@ -112,7 +115,7 @@ fun RegistroScreen(loginViewModel: RegistroViewModel = viewModel(), registerView
                     painterResource(id = R.drawable.password),
                     onTextSelected = {
                         registerViewModel.setContrasena(it)
-                        //loginViewModel.onEvent(UIEventRegistro.PasswordChanged(it))
+                        loginViewModel.onEvent(UIEventRegistro.PasswordChanged(it))
 
                     },
                     errorStatus = loginViewModel.registrationIUState.value.passwordError
@@ -133,7 +136,7 @@ fun RegistroScreen(loginViewModel: RegistroViewModel = viewModel(), registerView
 
                 ButtonComponent(
                     value = stringResource(id = R.string.registro), onButtonClicked = {
-                        //loginViewModel.onEvent(UIEventRegistro.RegisterButtonClicked)
+                        loginViewModel.onEvent(UIEventRegistro.RegisterButtonClicked)
                         registerViewModel.register(
                             object : RegisterCallback{
 

@@ -55,6 +55,7 @@ class RegisterAPIViewModel: ViewModel() {
 
                 val response: Response<UserResponse> = RetrofitClient.webService.register(_uiStateRegister.value)
                 Log.d(TAG, response.code().toString())
+                Log.d(TAG, response.body()?.valid.toString())
                 if (response.isSuccessful && response.code() == 200){
                     withContext(Dispatchers.Main) {
                         callback.onRegisterResult(true)
