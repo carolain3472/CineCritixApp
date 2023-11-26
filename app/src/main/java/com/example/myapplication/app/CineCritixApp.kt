@@ -11,6 +11,8 @@ import com.example.myapplication.navigation.Screen
 import com.example.myapplication.screens.LandInScreen
 import com.example.myapplication.screens.LoginScreen
 import com.example.myapplication.screens.RegistroScreen
+import com.example.myapplication.screens.ResetPassword
+import com.example.myapplication.screens.ResetPasswordEmail
 import com.example.myapplication.screens.TerminosCondicionesScreen
 
 @Composable
@@ -37,6 +39,14 @@ fun CineCritixApp(){
 
                 is Screen.Login -> {
                     LoginScreen()
+                }
+
+                is Screen.ResetPasswordEmail -> {
+                    ResetPasswordEmail()
+                }
+
+                is Screen.ResetPassword -> {
+                    ResetPassword()
                 }
 
                 is Screen.MainScreen -> {

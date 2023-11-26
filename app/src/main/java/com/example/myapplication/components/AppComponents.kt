@@ -127,6 +127,25 @@ fun NormalTextComponent(value:String){
 }
 
 @Composable
+fun NormalTextComponentBlack(value:String){
+    Text(
+        text= value,
+        modifier= Modifier
+            .fillMaxWidth()
+            .heightIn(min = 40.dp),
+        style = TextStyle(
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Normal,
+            fontStyle = FontStyle.Normal,
+        )
+        ,
+        color= colorResource(id = R.color.black),
+        textAlign = TextAlign.Justify
+    )
+
+}
+
+@Composable
 fun HeadingTextComponent(value:String){
     Text(
         text= value,
