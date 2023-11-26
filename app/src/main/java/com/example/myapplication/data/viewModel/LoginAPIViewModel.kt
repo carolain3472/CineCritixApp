@@ -48,7 +48,7 @@ class LoginAPIViewModel: ViewModel() {
                 //Log.d(TAG1, response.body()?.valid.toString())
                 //Log.d(TAG1, response.body()?.token.toString())
 
-                if (response.isSuccessful && response.code() == 200){
+                if ( response.body()?.valid ?: false && response.isSuccessful && response.code() == 200){
                     val userLoginResponse: UserLoginResponse? = response.body()
 
                     // Verificar si el cuerpo no es nulo antes de utilizarlo

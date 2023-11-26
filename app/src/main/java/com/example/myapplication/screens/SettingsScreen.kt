@@ -1,5 +1,6 @@
 package com.example.myapplication.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +32,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,6 +65,9 @@ import coil.size.Scale
 import com.example.myapplication.BottomBarScreen
 import com.example.myapplication.R
 import com.example.myapplication.components.ButtonComponent
+import com.example.myapplication.components.PasswordTextField
+import com.example.myapplication.data.UIEventLogin
+import com.example.myapplication.data.viewModel.LoginViewModel
 import com.example.myapplication.data.viewModel.RegistroViewModel
 import com.example.myapplication.data.viewModel.UserViewModel
 
@@ -251,7 +256,9 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
 
 
 
-    //ShowDialog
+    var loginViewModel = LoginViewModel()
+
+
 
     if (showDialog) {
         Box(
@@ -262,6 +269,7 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
+
             AlertDialog(
                 onDismissRequest = {
                     showDialog = false
@@ -272,7 +280,6 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                 },
 
 
-
                 text = {
                     Column {
                         Spacer(modifier = modifier.padding(10.dp))
@@ -280,10 +287,11 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                         //campo contraseña
                         OutlinedTextField(
                             value = newPassword,
-                            onValueChange = { newPassword = it},
+                            onValueChange = { newPassword = it; loginViewModel.onEvent(UIEventLogin.PasswordChanged(it)); Log.d("TAG5", loginViewModel.loginIUState.value.passwordError.toString())},
                             leadingIcon = {
                                 Icon(imageVector = Icons.Default.Lock, contentDescription = "Contraseña", tint = Color.White)
                             },
+                            isError= !loginViewModel.loginIUState.value.passwordError,
                             trailingIcon = {
                                 val iconPainter = if (passwordVisible) {
                                     androidx.compose.ui.res.painterResource(id = R.drawable.visibilityon)
@@ -320,6 +328,7 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                                 .background(Color.Black),
 
                             textStyle = TextStyle.Default.copy(color = Color.White))
+
 
 
                     }

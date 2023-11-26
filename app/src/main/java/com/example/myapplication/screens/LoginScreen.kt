@@ -117,9 +117,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel(), loginAPIViewModel:
 
                 Spacer(modifier = Modifier.height(30.dp))
 
-                ClickablePasswordTextComponent(value = "", onTextSelected = {
-
-                })
+                ClickablePasswordTextComponent(value = "", onTextSelected = { CineCritixAppRouter.navigateTo(Screen.ResetPasswordEmail) })
 
                 Spacer(modifier = Modifier.height(10.dp))
 
