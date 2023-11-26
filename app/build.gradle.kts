@@ -109,6 +109,11 @@ dependencies {
     implementation ("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
     implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 
+    implementation("com.google.accompanist:accompanist-permissions:0.28.0")
+    implementation("androidx.camera:camera-camera2:1.3.0")
+    implementation("androidx.camera:camera-lifecycle:1.3.0")
+    implementation("androidx.camera:camera-view:1.3.0")
+
 
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.05.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
