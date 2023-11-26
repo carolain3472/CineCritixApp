@@ -1,8 +1,10 @@
-package com.example.myapplication.data
+package com.example.myapplication.data.viewModel
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.myapplication.data.RegistrationIUState
+import com.example.myapplication.data.UIEventRegistro
 import com.example.myapplication.data.rules.Validator
 import com.example.myapplication.navigation.CineCritixAppRouter
 import com.example.myapplication.navigation.Screen
@@ -18,7 +20,7 @@ class RegistroViewModel: ViewModel() {
 
     var signUpInProgress = mutableStateOf(false)
 
-    fun onEvent(event:UIEventRegistro){
+    fun onEvent(event: UIEventRegistro){
         validateDataWithRules()
         when(event){
             is UIEventRegistro.FirstNameChanged -> {
@@ -52,9 +54,16 @@ class RegistroViewModel: ViewModel() {
                 )
             }
 
-            is UIEventRegistro.DocumentChanged-> {
+            is UIEventRegistro.DocumentChanged -> {
                 registrationIUState.value = registrationIUState.value.copy(
                     doc = event.document
+                )
+                printState()
+            }
+
+            is UIEventRegistro.ApellidoChanged -> {
+                registrationIUState.value = registrationIUState.value.copy(
+                    apellido = event.apellido
                 )
                 printState()
             }
@@ -90,6 +99,10 @@ class RegistroViewModel: ViewModel() {
 
         val document = Validator.validateDoc(
             doc = registrationIUState.value.doc
+        )
+
+        val apellido = Validator.validateApellido(
+            apellido = registrationIUState.value.apellido
         )
 
         Log.d(TAG, "Inside_validateDataWithRules")

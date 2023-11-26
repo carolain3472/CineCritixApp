@@ -2,6 +2,7 @@ package com.example.myapplication.navigation
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import com.example.myapplication.data.viewModel.UserViewModel
 
 
 sealed class Screen(){
@@ -12,6 +13,9 @@ sealed class Screen(){
 
     object MainScreen:Screen()
 
+    data class MainScreenWithViewModel(val userViewModel: UserViewModel) : Screen()
+
+
 }
 
 object CineCritixAppRouter {
@@ -19,6 +23,11 @@ object CineCritixAppRouter {
 
     fun navigateTo(destination: Screen){
         currentScreen.value= destination
+    }
+
+    // Nueva función para navegar a MainScreen con ViewModel
+    fun navigateToMainScreen(userViewModel: UserViewModel) {
+        navigateTo(Screen.MainScreenWithViewModel(userViewModel))
     }
 }
 

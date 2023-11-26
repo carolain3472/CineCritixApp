@@ -1,10 +1,13 @@
-package com.example.myapplication.data
+package com.example.myapplication.data.viewModel
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.APIBackend.RetrofitClient
+import com.example.myapplication.data.LoginCallBack
+import com.example.myapplication.data.request.UserLogin
+import com.example.myapplication.data.response.UserLoginResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -14,6 +17,7 @@ var TAG1 = "LOGIN"
 class LoginAPIViewModel: ViewModel() {
 
     val _uiStateLogin = mutableStateOf(UserLogin())
+
 
     fun setEmail(email: String){
         _uiStateLogin.value = _uiStateLogin.value.copy(
@@ -54,7 +58,9 @@ class LoginAPIViewModel: ViewModel() {
 
                     }
                     withContext(Dispatchers.Main) {
+                        callback.onViewModelResult(response)
                         callback.onLoginResult(true)
+
                     }
 
 

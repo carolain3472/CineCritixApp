@@ -3,7 +3,6 @@ package com.example.myapplication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,9 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,43 +25,44 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.data.RegistroViewModel
+import com.example.myapplication.data.viewModel.RegistroViewModel
+import com.example.myapplication.data.viewModel.UserViewModel
 import com.example.myapplication.navigation.BottomNavGraph
 
 
 
 @Composable
-fun MainScreen(navController: NavHostController = rememberNavController()){
+fun MainScreen(navController: NavHostController = rememberNavController(), userViewModel: UserViewModel = viewModel() ) {
     //val navController = rememberNavController()
+    userViewModel.getInfo()
+
+    val nombreUsuario = userViewModel.userLoginResponse.value?.body()?.user_nombre
     Scaffold (
-        topBar = { TopBar(modifier = Modifier.fillMaxWidth(), "Carolain Jimenez", navController) },
+        topBar = {
+            if (nombreUsuario != null) {
+                TopBar(modifier = Modifier.fillMaxWidth(), nombreUsuario, navController, userViewModel)
+            }
+        },
         bottomBar = { BottomBar(navController = navController) }
     ){contentPadding ->
         Column(modifier = Modifier.padding(contentPadding)
         ) {
             BottomNavGraph(
-                navController = navController)
+                navController = navController, userViewModel= userViewModel)
 
         }
 
@@ -74,6 +72,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()){
 
 @Composable
     fun BottomBar(navController: NavHostController) {
+
     /**val colors = NavigationBarItemColors(
         selectedIconColor = colorResource(id = R.color.sombraBoton),
         disabledIconColor = Color.LightGray ,
@@ -83,6 +82,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()){
         unselectedIconColor = Color.LightGray,
         unselectedTextColor = Color.LightGray
     )*/
+
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.Favorite,
@@ -124,7 +124,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()){
     }
 
 @Composable
-fun TopBar(modifier: Modifier = Modifier, nombre:String, navController: NavHostController){
+fun TopBar(modifier: Modifier = Modifier, nombre:String, navController: NavHostController, userViewModel: UserViewModel = viewModel()){
     val context = LocalContext.current
 
     var showDialog by remember { mutableStateOf(false) }
@@ -155,6 +155,7 @@ fun TopBar(modifier: Modifier = Modifier, nombre:String, navController: NavHostC
                     imageVector = Icons.Default.ExitToApp,
                     contentDescription = stringResource(id = R.string.salir))
             }
+
             Box(modifier = Modifier.shadow(8.dp, shape = MaterialTheme.shapes.medium),){
                 IconButton(
                     modifier = Modifier
@@ -195,6 +196,7 @@ fun TopBar(modifier: Modifier = Modifier, nombre:String, navController: NavHostC
                             showDialog = false
                             // Aquí puedes agregar el código para cerrar sesión
                             val loginViewModel = RegistroViewModel()
+                            userViewModel.logout()
                             loginViewModel.logout()
                         },
                         colors = ButtonDefaults.buttonColors(

@@ -37,7 +37,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.BottomBarScreen
 import com.example.myapplication.R
 import com.example.myapplication.components.ButtonComponent
 import com.example.myapplication.components.ClickablePasswordTextComponent
@@ -47,20 +46,21 @@ import com.example.myapplication.components.HeadingTextComponent
 import com.example.myapplication.components.MyTextField
 import com.example.myapplication.components.NormalTextComponent
 import com.example.myapplication.components.PasswordTextField
-import com.example.myapplication.data.LoginAPIViewModel
+import com.example.myapplication.data.viewModel.LoginAPIViewModel
 import com.example.myapplication.data.LoginCallBack
-import com.example.myapplication.data.LoginViewModel
-import com.example.myapplication.data.RegisterAPIViewModel
-import com.example.myapplication.data.RegisterCallback
+import com.example.myapplication.data.viewModel.LoginViewModel
 import com.example.myapplication.data.UIEventLogin
+import com.example.myapplication.data.response.UserLoginResponse
+import com.example.myapplication.data.viewModel.UserViewModel
 import com.example.myapplication.navigation.CineCritixAppRouter
 import com.example.myapplication.navigation.Screen
 import com.example.myapplication.navigation.SystemBackButtonHandler
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import retrofit2.Response
 
 private val TAG= "LOGIIN SCREEN"
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel = viewModel(), loginAPIViewModel: LoginAPIViewModel = viewModel()) {
+fun LoginScreen(loginViewModel: LoginViewModel = viewModel(), loginAPIViewModel: LoginAPIViewModel = viewModel(), userViewModel: UserViewModel = viewModel()) {
 
     val viewModel = LoginViewModel()
     val user = rememberUpdatedState(viewModel.userLiveData.value).value
@@ -130,14 +130,25 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel(), loginAPIViewModel:
                         loginAPIViewModel.login(
                             object : LoginCallBack {
 
+                                override fun onViewModelResult(success: Response<UserLoginResponse>) {
+                                    // Implementa la lógica necesaria para manejar el resultado del ViewModel
+                                    userViewModel.setUserLoginResponse(success)
+                                }
+
                                 override fun onLoginResult(success: Boolean) {
                                     if (success){
-                                        CineCritixAppRouter.navigateTo(Screen.MainScreen)
+                                        CineCritixAppRouter.navigateToMainScreen(userViewModel)
+                                        //CineCritixAppRouter.navigateTo(Screen.MainScreen)
                                     }else{
                                         showErrorDialog = true
                                     }
                                 }
+
+
+
                             }
+
+
                         )
                     },
                     isEnabled = loginViewModel.allValidationPassed.value

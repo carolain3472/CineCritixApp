@@ -1,12 +1,11 @@
 package com.example.myapplication.test
 
 import com.example.myapplication.data.LoginIUState
-import com.example.myapplication.data.LoginViewModel
+import com.example.myapplication.data.viewModel.LoginViewModel
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import org.junit.Assert
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
