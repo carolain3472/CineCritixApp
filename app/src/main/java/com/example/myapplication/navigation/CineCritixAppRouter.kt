@@ -13,6 +13,10 @@ sealed class Screen(){
 
     object MainScreen:Screen()
 
+    object ResetPasswordEmail:Screen()
+
+    object ResetPassword:Screen()
+
     data class MainScreenWithViewModel(val userViewModel: UserViewModel) : Screen()
 
 

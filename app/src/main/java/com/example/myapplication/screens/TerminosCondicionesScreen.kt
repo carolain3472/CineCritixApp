@@ -1,8 +1,18 @@
 package com.example.myapplication.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.IconButton
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,15 +29,60 @@ import com.example.myapplication.navigation.SystemBackButtonHandler
 
 @Composable
 fun TerminosCondicionesScreen(){
-    Surface(modifier = Modifier
+    Scaffold(
+        topBar = {IconButton(onClick = {
+            CineCritixAppRouter.navigateTo(Screen.RegistroScreen)
+        }) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = stringResource(id = R.string.salir))
+        }},
+
+        modifier = Modifier
         .fillMaxSize()
         .background(color = Color.White)
-        .padding(16.dp)) {
+        .padding(16.dp)) {contentPadding ->
 
-        HeadingTextComponentBlack(value = stringResource(id = R.string.terminosCondiciones))
-        SystemBackButtonHandler{
-            CineCritixAppRouter.navigateTo(Screen.RegistroScreen)
+
+        LazyColumn(modifier = Modifier.padding(contentPadding))
+        {
+
+            items(1){
+
+
+
+                HeadingTextComponentBlack(value = stringResource(id = R.string.terminosCondiciones))
+
+                Text(text = stringResource(id = R.string.texto_condiciones))
+
+                Spacer(modifier = Modifier.padding(10.dp))
+
+                HeadingTextComponentBlack(value = stringResource(id = R.string.politicaPrivacidad))
+
+                Text(text = stringResource(id = R.string.politicatext))
+
+                Spacer(modifier = Modifier.padding(10.dp))
+
+
+                HeadingTextComponentBlack(value = stringResource(id = R.string.autorizacion))
+
+                Text(text = stringResource(id = R.string.datospersonalestext))
+
+
+
+
+
+            }
+
         }
+
+
+
+
+
+
+
+
 
     }
 }
