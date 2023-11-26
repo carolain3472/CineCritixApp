@@ -8,13 +8,9 @@ import androidx.compose.ui.graphics.Color
 import com.example.myapplication.MainScreen
 import com.example.myapplication.navigation.CineCritixAppRouter
 import com.example.myapplication.navigation.Screen
-import com.example.myapplication.screens.FavoriteScreen
-import com.example.myapplication.screens.HomeScreen
 import com.example.myapplication.screens.LandInScreen
 import com.example.myapplication.screens.LoginScreen
 import com.example.myapplication.screens.RegistroScreen
-import com.example.myapplication.screens.ReviewScreen
-import com.example.myapplication.screens.SettingsScreen
 import com.example.myapplication.screens.TerminosCondicionesScreen
 
 @Composable
@@ -25,7 +21,7 @@ fun CineCritixApp(){
 
         Crossfade(targetState = CineCritixAppRouter.currentScreen) {
             currentState ->
-            when(currentState.value){
+            when(val screen = currentState.value) {
 
                 is Screen.LandInScreen -> {
                     LandInScreen()
@@ -34,20 +30,30 @@ fun CineCritixApp(){
                 is Screen.RegistroScreen -> {
                     RegistroScreen()
                 }
+
                 is Screen.TerminosCondicionesScreen -> {
                     TerminosCondicionesScreen()
                 }
+
                 is Screen.Login -> {
                     LoginScreen()
                 }
 
                 is Screen.MainScreen -> {
+
                     MainScreen()
                 }
 
-            }
-            
-        }
+                is Screen.MainScreenWithViewModel -> {
+                    // Usa el ViewModel pasado como parámetro
+                    MainScreen(userViewModel = screen.userViewModel)
+                }
 
+
+            }
+
+        }
+            
     }
+
 }

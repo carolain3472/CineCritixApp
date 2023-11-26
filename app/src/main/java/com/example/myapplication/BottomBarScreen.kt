@@ -43,5 +43,11 @@ sealed class BottomBarScreen(
         title = R.string.search,
         icon = Icons.Default.Search
     )
+
+    object Camara: BottomBarScreen(
+        route = "CARAMRA",
+        title = R.string.camara,
+        icon = Icons.Default.Search
+    )
 }
 
