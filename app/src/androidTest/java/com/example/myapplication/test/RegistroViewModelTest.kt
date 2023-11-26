@@ -1,6 +1,6 @@
 package com.example.myapplication.test
 
-import com.example.myapplication.data.RegistroViewModel
+import com.example.myapplication.data.viewModel.RegistroViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import org.junit.Assert.assertTrue

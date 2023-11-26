@@ -1,14 +1,16 @@
-package com.example.myapplication.data
+package com.example.myapplication.data.viewModel
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.APIBackend.RetrofitClient
+import com.example.myapplication.data.RegisterCallback
+import com.example.myapplication.data.request.UserRegister
+import com.example.myapplication.data.response.UserResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Callback
 import retrofit2.Response
 
 var TAG = "REGISTRO"
@@ -19,6 +21,13 @@ class RegisterAPIViewModel: ViewModel() {
     fun setNombre(nombre: String){
         _uiStateRegister.value = _uiStateRegister.value.copy(
             nombre = nombre
+        )
+    }
+
+
+    fun setApellido(apellido: String){
+        _uiStateRegister.value = _uiStateRegister.value.copy(
+            apellido = apellido
         )
     }
 
@@ -44,6 +53,7 @@ class RegisterAPIViewModel: ViewModel() {
 
         Log.d(TAG, "Hola")
         Log.d(TAG, _uiStateRegister.value.nombre)
+        Log.d(TAG, _uiStateRegister.value.apellido)
         Log.d(TAG, _uiStateRegister.value.documento)
         Log.d(TAG, _uiStateRegister.value.email)
         Log.d(TAG, _uiStateRegister.value.contrasena)

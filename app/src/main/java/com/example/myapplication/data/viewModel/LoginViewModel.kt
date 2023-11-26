@@ -1,4 +1,4 @@
-package com.example.myapplication.data
+package com.example.myapplication.data.viewModel
 
 import android.app.Activity
 import android.content.Intent
@@ -7,6 +7,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.myapplication.data.LoginIUState
+import com.example.myapplication.data.UIEventLogin
 import com.example.myapplication.data.rules.Validator
 import com.example.myapplication.navigation.CineCritixAppRouter
 import com.example.myapplication.navigation.Screen
@@ -35,7 +37,7 @@ class LoginViewModel : ViewModel() {
 
 
 
-    fun onEvent(event:UIEventLogin){
+    fun onEvent(event: UIEventLogin){
         when(event){
             is UIEventLogin.EmailChanged -> {
                 loginIUState.value= loginIUState.value.copy(

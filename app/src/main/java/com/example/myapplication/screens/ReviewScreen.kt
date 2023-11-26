@@ -11,9 +11,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.myapplication.components.ButtonComponent
 import com.example.myapplication.components.HeadingTextComponentBlack
-import com.example.myapplication.data.RegistroViewModel
+import com.example.myapplication.data.viewModel.RegistroViewModel
 
 @Composable
 fun ReviewScreen(navController: NavHostController, loginViewModel: RegistroViewModel = viewModel()){

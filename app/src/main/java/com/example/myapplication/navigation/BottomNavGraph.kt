@@ -1,16 +1,13 @@
 package com.example.myapplication.navigation
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.myapplication.BottomBarScreen
+import com.example.myapplication.data.viewModel.UserViewModel
+import com.example.myapplication.screens.CamaraScreen
 import com.example.myapplication.screens.FavoriteScreen
 import com.example.myapplication.screens.HomeScreen
 import com.example.myapplication.screens.ReviewScreen
@@ -18,7 +15,7 @@ import com.example.myapplication.screens.SearchScreen
 import com.example.myapplication.screens.SettingsScreen
 
 @Composable
-fun BottomNavGraph(navController: NavHostController){
+fun BottomNavGraph(navController: NavHostController, userViewModel: UserViewModel = viewModel()){
     NavHost(
         navController = navController,
         startDestination = BottomBarScreen.Home.route ){
@@ -36,11 +33,15 @@ fun BottomNavGraph(navController: NavHostController){
         }
 
         composable(route = BottomBarScreen.Settings.route){
-            SettingsScreen(navController)
+            SettingsScreen(navController = navController,userViewModel=userViewModel)
         }
 
         composable(route = BottomBarScreen.Search.route){
-                SearchScreen(navController)
+            SearchScreen(navController)
+        }
+
+        composable(route = BottomBarScreen.Camara.route){
+            CamaraScreen(navController = navController,userViewModel=userViewModel)
         }
     }
 }

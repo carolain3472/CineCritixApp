@@ -4,7 +4,12 @@ object Validator {
 
     fun validateName(fname:String) :ValidationResult{
         return ValidationResult(
-            (!fname.isNullOrEmpty() &&  fname.length>=6)
+            (!fname.isNullOrEmpty() &&  fname.length>=2)
+        )
+    }
+    fun validateApellido(apellido:String) :ValidationResult{
+        return ValidationResult(
+            (!apellido.isNullOrEmpty())
         )
     }
 
