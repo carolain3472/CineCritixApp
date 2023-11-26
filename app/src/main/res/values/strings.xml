@@ -6,10 +6,13 @@
     <string name="apellido">Apellidos</string>
     <string name="email">Email</string>
     <string name="password">Contraseña</string>
+    <string name="password2">Contraseña</string>
     <string name="hide">Ocultar contraseña</string>
     <string name="show">Mostrar contraseña</string>
     <string name="politica">A continuación aceptas nuestra politica de datos</string>
     <string name="terminosCondiciones">Términos y condiciones de uso</string>
+    <string name="politicaPrivacidad">Política de Privacidad</string>
+    <string name="autorizacion">Autorización de tratamiento de datos personales</string>
     <string name="registro">Registrate</string>
     <string name="updatecontra">updatecontra</string>
     <string name="updatepass">Actualizar Contraseña</string>
@@ -36,8 +39,159 @@
     <string name="registroLand">Registrate</string>
 
     <string name="registroLogin">Registrate aquí.</string>
+    
+    <string name="recuperarContraseña">Recuperar Contraseña</string>
+    <string name="nuevaContraseña">Nueva Contraseña</string>
+
+    <string name="label_email">
+        Hola querido usuario, para recuperar tu contraseña por favor digita el correo con el que normalmente ingresas a la app.
+        </string>
+
+    <string name="label_email2">
+        Luego de esto, enviaremos a tu correo un código el cual deberas digitar a continuación para ingresar una nueva contraseña.
+        Recuerda que tienes 15 minutos para ingresar el código.
+        </string>
+
+    <string name="label_email3">
+        Ingresa el codigo que te enviamos, seguido de una contraseña nueva.
+        Recuerda que tienes 4 intentos para ingresar el codigo de lo contrario se bloqueara el ingreso a la aplicación por 30 minutos.
+    </string>
+
+    <string name="codigo">Codigo</string>
+    <string name="nuevacontraseña">Nueva Contraseña</string>
+
 
 
     <string name="web_client_id">550756448190-8id69udk4qmtg9jkrphm7iq82504jlkt.apps.googleusercontent.com</string>
+
+    <string name="texto_condiciones">
+
+        \n\n
+
+        Bienvenido a CineCritixApp, una plataforma para la exploración y visualización de reseñas de películas. Al acceder y
+        utilizar nuestra aplicación, aceptas los siguientes términos y condiciones. Si no estás de acuerdo con estos términos, por favor, no uses nuestra aplicación. \n\n
+
+        <b>1. Contenido y Uso</b>\n\n
+
+        1.1. CineCritixApp proporciona información sobre películas y reseñas de usuarios. El contenido se ofrece con fines informativos y de entretenimiento.
+        \n\n
+        1.2. Los usuarios son responsables de su conducta al utilizar la aplicación. No se permite el uso de la aplicación de manera que viole las leyes locales,
+        nacionales o internacionales.\n\n
+
+        <b>2. Reseñas y Comentarios</b>\n\n
+
+        2.1. Los usuarios pueden enviar reseñas y comentarios sobre películas. CineCritixApp se reserva el derecho de moderar y eliminar contenido que viole nuestras políticas,
+        incluido el contenido ofensivo o difamatorio.\n\n
+
+        2.2. Las reseñas y comentarios expresan las opiniones de los usuarios y no reflejan necesariamente las opiniones de CineCritixApp.\n\n
+
+        <b>3. Privacidad y Datos Personales</b>\n\n
+
+        3.1. Al utilizar la aplicación, aceptas nuestra política de privacidad. CineCritixApp recopila y utiliza datos personales según lo establecido en nuestra política de
+        privacidad.\n\n
+        3.2. Los usuarios son responsables de mantener la confidencialidad de sus credenciales de inicio de sesión y de la seguridad de su cuenta.\n\n
+
+        <b>4. Propiedad Intelectual</b>\n\n
+
+        4.1. Todo el contenido proporcionado por CineCritixApp, incluyendo el diseño, la información, y las reseñas, está protegido por derechos de autor y otras leyes de
+        propiedad intelectual.\n\n
+        4.2. No está permitido copiar, reproducir, distribuir o modificar el contenido de la aplicación sin el consentimiento previo por escrito de CineCritixApp.\n\n
+
+        <b>5. Modificaciones y Terminación</b>\n\n
+
+        5.1. CineCritixApp se reserva el derecho de modificar estos términos y condiciones en cualquier momento. Los cambios serán efectivos al ser publicados en la aplicación.\n\n
+        5.2. CineCritixApp se reserva el derecho de terminar o suspender el acceso de cualquier usuario a la aplicación en caso de violación de estos términos.\n\n
+
+
+    </string>
+
+    <string name="politicatext">
+
+        \n\n
+
+        Fecha de entrada en vigencia: [26/11/2023]\n\n
+
+        Información Recopilada \n\n
+
+        CineCritixApp recopila información personal limitada y solo la utiliza con el propósito de mejorar la experiencia del usuario.
+        La información que recopilamos incluye:\n\n
+
+        Información de la Cuenta: \n\n
+        Al registrarse en CineCritixApp, recopilamos su dirección de correo electrónico y contraseña. Esta información se utiliza para autenticar su cuenta
+        y proporcionar acceso a características específicas.\n\n
+
+        Información de Perfil: \n\n
+        Puede proporcionar información adicional en su perfil, como su nombre y una imagen de perfil. Esta información es opcional y puede ser modificada en
+        cualquier momento \n\n
+
+        Datos de Uso:\n\n
+        Recopilamos datos sobre cómo utiliza la aplicación, como las películas que ve, las reseñas que crea y las interacciones con otros usuarios.
+        Estos datos se utilizan para mejorar nuestros servicios y personalizar la experiencia del usuario.\n\n
+
+        Uso de la Información\n\n
+        La información recopilada se utiliza para los siguientes propósitos:\n\n
+
+        Autenticación:\n Para verificar la identidad del usuario y garantizar la seguridad de la cuenta\n\n
+
+        Personalización:\n; Para adaptar la experiencia de la aplicación según sus preferencias y comportamientos de uso.\n\n
+
+        Mejora de Servicios:\n; Para analizar el uso de la aplicación y realizar mejoras continuas en nuestras funciones y características.\n\n
+
+        Compartir Información\n\n
+
+        CineCritixApp no vende ni comparte su información personal con terceros sin su consentimiento explícito, excepto en las siguientes circunstancias:\n\n
+
+        Colaboraciones con Terceros: \nPodemos compartir información con terceros que brinden servicios en colaboración con CineCritixApp para mejorar la
+        funcionalidad de la aplicación.\n\n
+
+        Cumplimiento Legal: \nPodemos divulgar información en respuesta a una solicitud legal o si creemos de buena fe que dicha divulgación es necesaria
+        para cumplir con la ley, proteger nuestros derechos, o garantizar la seguridad de los usuarios.\n\n
+
+        Seguridad de la Información\n\n
+
+        CineCritixApp toma medidas para proteger la información personal recopilada. Esto incluye prácticas de seguridad física y electrónica para evitar el acceso no autorizado.\n\n
+
+        Cambios en la Política de Privacidad\n\n
+
+        CineCritixApp se reserva el derecho de actualizar esta política en cualquier momento. Se notificarán cambios significativos directamente a los usuarios.
+        \n\n
+
+    </string>
+
+    <string name="datospersonalestext">
+
+        \n\n
+
+        Consentimiento del Usuario:\n\n
+        Al usar CineCritixApp, doy mi consentimiento para el tratamiento de mis datos personales según lo establecido a continuación.\n\n
+
+        Datos Recopilados:\n\n
+
+        Información de cuenta (correo electrónico y contraseña)\n
+        Información de perfil (nombre, imagen opcional)\n
+        Datos de uso (películas vistas, reseñas, interacciones)\n
+
+        Propósitos del Tratamiento:\n\n
+
+        Autenticación y seguridad\n
+        Personalización de la experiencia\n
+        Mejora de servicios\n
+
+        Duración del Consentimiento:\n\n
+        Válido mientras use la aplicación; puede retirarse en cualquier momento.\n\n
+
+        Derechos del Usuario:\n\n
+
+        Acceso a la información personal\n
+        Rectificación de datos inexactos\n
+        Eliminación de datos personales\n
+        \n
+        Revocación del Consentimiento:\n\n
+
+        Puede revocar el consentimiento en cualquier momento sin afectar la legalidad del tratamiento previo.\n\n
+
+
+
+    </string>
 
 </resources>

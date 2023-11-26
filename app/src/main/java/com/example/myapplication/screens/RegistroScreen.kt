@@ -137,6 +137,7 @@ fun RegistroScreen(loginViewModel: RegistroViewModel = viewModel(), registerView
                     )
 
                     Spacer(modifier = Modifier.height(10.dp))
+
                     CheckboxComponent(value = stringResource(id = R.string.politica),
                         onTextSelected = {
                             CineCritixAppRouter.navigateTo(Screen.TerminosCondicionesScreen)

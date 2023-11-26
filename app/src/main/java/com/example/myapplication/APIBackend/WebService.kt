@@ -6,8 +6,12 @@ import com.example.myapplication.data.response.UserInfoResponse
 import com.example.myapplication.data.request.UserLogin
 import com.example.myapplication.data.response.UserLoginResponse
 import com.example.myapplication.data.request.UserRegister
+import com.example.myapplication.data.request.UserResetContrasena
+import com.example.myapplication.data.request.UserResetContrasenaEmail
 import com.example.myapplication.data.request.UserUpdateContrasena
 import com.example.myapplication.data.request.UserUpdateDatos
+import com.example.myapplication.data.response.UserResetContrasenaEmailResponse
+import com.example.myapplication.data.response.UserResetContrasenaResponse
 import com.example.myapplication.data.response.UserResponse
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -56,6 +60,17 @@ interface WebService {
     suspend fun logout(
         @Body usuario: UserInfo
     ): Response<UserResponse>
+
+
+    @POST("api/password_reset/")
+    suspend fun passwordReset(
+        @Body usuario: UserResetContrasenaEmail
+    ): Response<UserResetContrasenaEmailResponse>
+
+    @POST("users/validate_token/")
+    suspend fun newPassword(
+        @Body usuario: UserResetContrasena
+    ): Response<UserResetContrasenaResponse>
 
 
 
