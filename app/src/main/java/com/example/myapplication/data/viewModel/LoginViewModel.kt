@@ -82,6 +82,13 @@ class LoginViewModel : ViewModel() {
 
     }
 
+    fun validatePasswordWithRules(pass:String):Boolean{
+        val passwordResult= Validator.validatePassword(
+            password= pass
+        )
+        return passwordResult.status
+    }
+
     fun login() {
 
         loginInProgress.value = true

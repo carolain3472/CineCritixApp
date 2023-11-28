@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.APIBackend.RetrofitClient
+import com.example.myapplication.data.CodeCallBack
 import com.example.myapplication.data.request.UserInfo
 import com.example.myapplication.data.request.UserResetContrasena
 import com.example.myapplication.data.request.UserResetContrasenaEmail
@@ -31,19 +32,16 @@ class ResetPasswordViewModel: ViewModel(){
     }
     fun setNewPasswordToken(token:String){
         _uiStateNewPassword.value = _uiStateNewPassword.value.copy(
-
             token = token,
-
         )
     }
     fun setNewPassword( password:String){
         _uiStateNewPassword.value = _uiStateNewPassword.value.copy(
-
             password=password
         )
     }
 
-    fun ResetPassword(){
+    fun ResetPassword(callback: CodeCallBack){
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
@@ -56,18 +54,29 @@ class ResetPasswordViewModel: ViewModel(){
                     // Manejar la respuesta del servidor según tus necesidades
                     Log.d(TAG6, "Se guardo")
                     Log.d(TAG6, uploadResponse.toString())
+
+
+
+
                 } else {
                     // Manejar errores de la respuesta del servidor
                     Log.d(TAG6, "Error en la carga: ${response.message()}")
                 }
+
+                withContext(Dispatchers.Main){
+                    callback.onCodeResult(response.code())
+                }
+
             } catch (e: Exception) {
                 // Manejar excepciones
                 Log.d(TAG6, "Error en la carga: ${e.message}")
             }
+
+
         }
     }
 
-    fun NewPassword(){
+    fun NewPassword(callback: CodeCallBack){
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -82,15 +91,7 @@ class ResetPasswordViewModel: ViewModel(){
 
                 Log.d(TAG6, response.code().toString())
 
-
-
-                if (response.isSuccessful) {
-
-                    withContext(Dispatchers.Main) {
-
-
-
-                    }
+                if (response.isSuccessful && response.code() == 200 ) {
 
                     // Manejar la respuesta del servidor según tus necesidades
                     Log.d(TAG6, "Se guardo")
@@ -99,6 +100,11 @@ class ResetPasswordViewModel: ViewModel(){
                     // Manejar errores de la respuesta del servidor
                     Log.d(TAG6, "Error en la carga: ${response.code()}")
                 }
+
+                withContext(Dispatchers.Main){
+                    callback.onCodeResult(response.code())
+                }
+
             } catch (e: Exception) {
                 // Manejar excepciones
                 Log.d(TAG6, "Error en la carga: ${e.message}")
