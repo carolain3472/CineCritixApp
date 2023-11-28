@@ -1,5 +1,7 @@
 package com.example.myapplication.data.rules
 
+import java.util.regex.Pattern
+
 object Validator {
 
     fun validateName(fname:String) :ValidationResult{
@@ -20,9 +22,18 @@ object Validator {
     }
 
     fun validatePassword(password:String): ValidationResult{
-        return ValidationResult(
-            (!password.isNullOrEmpty() && password.length>=4)
-        )
+        val minLength = 6
+        val specialCharacterPattern = Pattern.compile("[!@#\$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]")
+        val commonPasswords = listOf("123456", "password", "qwerty", "123456789", "12345678","987654321", "contraseña1234","contraseña123")
+
+        return if (password.length >= minLength
+            && specialCharacterPattern.matcher(password).find()
+            && !commonPasswords.contains(password.toLowerCase())
+        ) {
+            ValidationResult(true)
+        } else {
+            ValidationResult(false)
+        }
     }
 
     fun validatePrivacyPolicyAcceptance(statusValue:Boolean):ValidationResult{
