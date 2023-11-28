@@ -57,9 +57,15 @@
         Recuerda que tienes 4 intentos para ingresar el codigo de lo contrario se bloqueara el ingreso a la aplicación por 30 minutos.
     </string>
 
+    <string name="label_email4">
+        Nota: La contraseña debe contener al menos un carácter especial y debe tener un tamaño mayor a 6.
+
+       </string>
+
     <string name="codigo">Codigo</string>
     <string name="nuevacontraseña">Nueva Contraseña</string>
 
+    <string name="respuestacodigo">Aviso: Recuperación de contraseña</string>
 
 
     <string name="web_client_id">550756448190-8id69udk4qmtg9jkrphm7iq82504jlkt.apps.googleusercontent.com</string>

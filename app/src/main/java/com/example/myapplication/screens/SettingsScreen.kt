@@ -291,7 +291,7 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                             leadingIcon = {
                                 Icon(imageVector = Icons.Default.Lock, contentDescription = "Contraseña", tint = Color.White)
                             },
-                            isError= !loginViewModel.loginIUState.value.passwordError,
+                            isError= loginViewModel.validatePasswordWithRules(newPassword),
                             trailingIcon = {
                                 val iconPainter = if (passwordVisible) {
                                     androidx.compose.ui.res.painterResource(id = R.drawable.visibilityon)
@@ -337,9 +337,8 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                 confirmButton = {
                     androidx.compose.material.Button(
                         onClick = {
-                            showDialog = false
-
                             userViewModel.updateContrasena(newPassword)
+                            showDialog = false
                             newPassword=""
                         },
                         colors = androidx.compose.material.ButtonDefaults.buttonColors(
@@ -347,7 +346,8 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                             contentColor = colorResource(id = R.color.arribaBoton),
                             disabledBackgroundColor = colorResource(id = R.color.abajoBoton),
                             disabledContentColor = Color.White
-                        )
+                        ),
+                        enabled = loginViewModel.validatePasswordWithRules(newPassword)
                     ) {
                         Text( stringResource(id = R.string.confirmar_salir))
                     }
