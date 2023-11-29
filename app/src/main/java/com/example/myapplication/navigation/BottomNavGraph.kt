@@ -13,6 +13,7 @@ import com.example.myapplication.screens.HomeScreen
 import com.example.myapplication.screens.ReviewScreen
 import com.example.myapplication.screens.SearchScreen
 import com.example.myapplication.screens.SettingsScreen
+import com.example.myapplication.screens.UpdatePasswordScreen
 
 @Composable
 fun BottomNavGraph(navController: NavHostController, userViewModel: UserViewModel = viewModel()){
@@ -42,6 +43,10 @@ fun BottomNavGraph(navController: NavHostController, userViewModel: UserViewMode
 
         composable(route = BottomBarScreen.Camara.route){
             CamaraScreen(navController = navController,userViewModel=userViewModel)
+        }
+
+        composable(route = BottomBarScreen.UpdatePassword.route){
+            UpdatePasswordScreen(navController = navController,userViewModel=userViewModel)
         }
     }
 }
