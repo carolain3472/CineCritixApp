@@ -1,6 +1,7 @@
 package com.example.myapplication.screens
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -14,15 +15,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -43,6 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -65,6 +70,8 @@ import coil.size.Scale
 import com.example.myapplication.BottomBarScreen
 import com.example.myapplication.R
 import com.example.myapplication.components.ButtonComponent
+import com.example.myapplication.components.ClickeableTextComponent
+import com.example.myapplication.components.HeadingTextComponentBlack
 import com.example.myapplication.components.PasswordTextField
 import com.example.myapplication.data.UIEventLogin
 import com.example.myapplication.data.viewModel.LoginViewModel
@@ -82,8 +89,9 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
     var nombre = userViewModel.userInfoResponse.value?.body()?.user_nombre
     var apellido = userViewModel.userInfoResponse.value?.body()?.user_apellido
     var correo = userViewModel.userInfoResponse.value?.body()?.user_email
-    var imagen = userViewModel.userInfoResponse.value?.body()?.user_profile
-    var urlImagen = "https://cinecritixbackend.onrender.com/media/"+imagen
+    var urlImagen = userViewModel.userInfoResponse.value?.body()?.user_profile.toString()
+    //var urlImagen = "https://storage.googleapis.com/bucket-final-este-si-con-fe/"+imagen
+    //var urlImagen = "https://cinecritixbackend.onrender.com/media/"+imagen
 
 
     var name by remember { mutableStateOf("Nombre") }
@@ -94,6 +102,7 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
     var passwordVisible2 by remember { mutableStateOf(false) }
     var newPassword by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+
 
 
 
@@ -132,7 +141,9 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                     IconButton(
                         modifier = Modifier
                             .background(Color.White),
-                        onClick = { showDialog = true}
+                        onClick = {
+                            navController.navigate(BottomBarScreen.UpdatePassword.route)
+                        }
                     ) {
                         val imagePainter =
                             painterResource(id = R.drawable.updatecontrasena) // Reemplaza 'tu_imagen' con el nombre de tu imagen en drawables
@@ -162,7 +173,10 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                         modifier = Modifier
                             .background(colorResource(R.color.grisClaro))
                             .fillMaxWidth()
-                            .padding(16.dp)
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+
                     ) {
 
                         Text(
@@ -241,6 +255,14 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                             onButtonClicked = { userViewModel.updateDatos(name, lastname)},
                             isEnabled = boolEdit)
 
+                        ClickeableTextComponent(
+                            text="Eliminar Cuenta",
+                            icon=Icons.Default.Delete,
+                            onTextSelected = { showDialog=true },
+                            tint= Color.Red
+
+                        )
+
 
 
                     }
@@ -275,81 +297,45 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                     showDialog = false
                 },
                 title = {
-                    Text(text = stringResource(id = R.string.updatepass),
-                    modifier=Modifier.padding(bottom = 10.dp))
+                    HeadingTextComponentBlack(
+                        value = stringResource(id = R.string.eliminarCuenta))
                 },
 
 
                 text = {
-                    Column {
-                        Spacer(modifier = modifier.padding(10.dp))
+                    Row {
+                        Icon(
+                            imageVector = Icons.Default.Warning,
+                            contentDescription = null,
+                            tint = colorResource(id = R.color.sombraBoton)
+                        )
 
-                        //campo contraseña
-                        OutlinedTextField(
-                            value = newPassword,
-                            onValueChange = { newPassword = it; loginViewModel.onEvent(UIEventLogin.PasswordChanged(it)); Log.d("TAG5", loginViewModel.loginIUState.value.passwordError.toString())},
-                            leadingIcon = {
-                                Icon(imageVector = Icons.Default.Lock, contentDescription = "Contraseña", tint = Color.White)
-                            },
-                            isError= loginViewModel.validatePasswordWithRules(newPassword),
-                            trailingIcon = {
-                                val iconPainter = if (passwordVisible) {
-                                    androidx.compose.ui.res.painterResource(id = R.drawable.visibilityon)
-                                } else {
-                                    androidx.compose.ui.res.painterResource(id = R.drawable.visibilityoff)
-                                }
+                        Spacer(modifier = Modifier.width(8.dp))
 
-                                var description = if (passwordVisible) {
-                                    stringResource(id = R.string.hide)
-                                } else {
-                                    stringResource(id = R.string.show)
-                                }
-
-                                IconButton(
-                                    onClick = { passwordVisible = !passwordVisible }
-                                ) {
-                                    Icon(painter = iconPainter, contentDescription = description, modifier=Modifier.size(25.dp))
-                                }
-                            },
-                            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                            keyboardOptions = KeyboardOptions.Default.copy(
-                                imeAction = ImeAction.Done
-                            ),
-                            singleLine = true,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 5.dp)
-                                .height(48.dp)
-                                .border(
-                                    width = 2.dp,
-                                    color = colorResource(id = R.color.colorPrimary), // Establece el color del borde a amarillo
-
-                                )
-                                .background(Color.Black),
-
-                            textStyle = TextStyle.Default.copy(color = Color.White))
-
-
-
+                        Text(text = "Estas seguro que deseas eliminar tu cuenta")
                     }
                 },
 
                 confirmButton = {
                     androidx.compose.material.Button(
                         onClick = {
-                            userViewModel.updateContrasena(newPassword)
-                            showDialog = false
-                            newPassword=""
+                            //Llamar el endpoint para eliminar la cuenta y para cerrar sesión y volver al login
+
+                            Log.d(TAG3,"ELIMINAR CUENTA")
+                            val loginViewModel = RegistroViewModel()
+                            //userViewModel.logout()
+                            userViewModel.eliminarCuenta()
+                            loginViewModel.logout()
                         },
                         colors = androidx.compose.material.ButtonDefaults.buttonColors(
-                            backgroundColor = colorResource(id = R.color.sombraBoton),
+                            backgroundColor = colorResource(id = R.color.abajoBoton),
                             contentColor = colorResource(id = R.color.arribaBoton),
-                            disabledBackgroundColor = colorResource(id = R.color.abajoBoton),
+                            disabledBackgroundColor = colorResource(id = R.color.sombraBoton),
                             disabledContentColor = Color.White
                         ),
-                        enabled = loginViewModel.validatePasswordWithRules(newPassword)
+
                     ) {
-                        Text( stringResource(id = R.string.confirmar_salir))
+                        Text( stringResource(id = R.string.confirmar_salir), color=Color.White)
                     }
                 },
 
@@ -358,7 +344,6 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                     androidx.compose.material.Button(
                         onClick = {
                             showDialog = false
-                            newPassword=""
                         },
                         colors = androidx.compose.material.ButtonDefaults.buttonColors(
                             backgroundColor = colorResource(id = R.color.sombraBoton),
@@ -378,6 +363,8 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
 
 @Composable
 fun botonEditarImagen(texto:String ,navController: NavHostController = rememberNavController(), ruta: String){
+
+
     Button(onClick = { navController.navigate(ruta)},
         // Ajusta el tamaño del botón según tus necesidades
         colors= ButtonDefaults.buttonColors(Color.Transparent)
@@ -404,6 +391,7 @@ fun botonEditarImagen(texto:String ,navController: NavHostController = rememberN
         }
 
     }
+
 }
 
 @Composable

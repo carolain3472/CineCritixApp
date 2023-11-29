@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
@@ -48,6 +49,11 @@ sealed class BottomBarScreen(
         route = "CARAMRA",
         title = R.string.camara,
         icon = Icons.Default.Search
+    )
+    object UpdatePassword: BottomBarScreen(
+        route = "UPDATEPASSWORD",
+        title = R.string.updatepassword,
+        icon = Icons.Default.Build
     )
 }
 
