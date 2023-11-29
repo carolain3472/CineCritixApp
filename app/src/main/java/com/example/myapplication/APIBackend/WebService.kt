@@ -1,5 +1,6 @@
 package com.example.myapplication.APIBackend
 
+import com.example.myapplication.data.request.UserEliminarCuenta
 import com.example.myapplication.data.response.UploadResponse
 import com.example.myapplication.data.request.UserInfo
 import com.example.myapplication.data.response.UserInfoResponse
@@ -10,10 +11,14 @@ import com.example.myapplication.data.request.UserResetContrasena
 import com.example.myapplication.data.request.UserResetContrasenaEmail
 import com.example.myapplication.data.request.UserUpdateContrasena
 import com.example.myapplication.data.request.UserUpdateDatos
+import com.example.myapplication.data.request.UserUpdateImage
+import com.example.myapplication.data.response.UserEliminarCuentaResponse
 import com.example.myapplication.data.response.UserResetContrasenaEmailResponse
 import com.example.myapplication.data.response.UserResetContrasenaResponse
 import com.example.myapplication.data.response.UserResponse
+import com.example.myapplication.data.response.UserUpdateImageResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Multipart
@@ -32,13 +37,18 @@ interface WebService {
         @Body usuario: UserLogin
     ): Response<UserLoginResponse>
 
+
+    //@POST("users/update-profile/")
+    //suspend fun uploadImage(
+    //    @Body usuario: UserUpdateImage,
+    //): Response<UserUpdateImageResponse>
+
     @Multipart
     @POST("users/update-profile/")
     suspend fun uploadImage(
-        @Part("email") email: String?,
+        @Part("email") email: RequestBody,
         @Part image: MultipartBody.Part
-    ): Response<UploadResponse>
-
+    ): Response<UserUpdateImageResponse>
 
     @POST("users/obtener-informacion/")
     suspend fun getInfo(
@@ -71,6 +81,14 @@ interface WebService {
     suspend fun newPassword(
         @Body usuario: UserResetContrasena
     ): Response<UserResetContrasenaResponse>
+
+
+    @POST("users/darme-de-baja/")
+    suspend fun eliminarCuenta(
+        @Body usuario: UserEliminarCuenta
+    ): Response<UserEliminarCuentaResponse>
+
+
 
 
 

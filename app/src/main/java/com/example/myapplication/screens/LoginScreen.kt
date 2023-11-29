@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,6 +66,14 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel(), loginAPIViewModel:
     val viewModel = LoginViewModel()
     val user = rememberUpdatedState(viewModel.userLiveData.value).value
     var showErrorDialog by remember { mutableStateOf(false) }
+
+
+    //loginViewModel.loginIUState.value.email= ""
+    //loginViewModel.loginIUState.value.password=""
+
+    Log.d(TAG, viewModel.allValidationPassed.value.toString())
+    Log.d(TAG, loginViewModel.loginIUState.value.emailError.toString())
+    Log.d(TAG, loginViewModel.loginIUState.value.passwordError.toString())
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -176,12 +185,23 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel(), loginAPIViewModel:
                 onDismissRequest = {
                     showErrorDialog = false
                 },
-                title = { Text(text = "Error") },
+                title = { Text(text = "Error al iniciar sesión") },
+
+                text = {
+                       Text(text = "Las credenciales proporcionadas son inválidas. Intente nuevamente")
+                },
+
                 confirmButton = {
-                    TextButton(
+                    Button(
                         onClick = {
                             showErrorDialog = false
-                        }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colorResource(id = R.color.sombraBoton),
+                            contentColor = Color.White,
+                            disabledContainerColor = colorResource(id = R.color.abajoBoton),
+                            disabledContentColor = Color.White
+                        ),
                     ) {
                         Text(text = "Aceptar")
                     }

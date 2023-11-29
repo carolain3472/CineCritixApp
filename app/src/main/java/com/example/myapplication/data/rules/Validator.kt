@@ -24,10 +24,15 @@ object Validator {
     fun validatePassword(password:String): ValidationResult{
         val minLength = 6
         val specialCharacterPattern = Pattern.compile("[!@#\$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]")
-        val commonPasswords = listOf("123456", "password", "qwerty", "123456789", "12345678","987654321", "contraseña1234","contraseña123")
+        val commonPasswords = listOf("123456", "password", "qwerty", "123456789", "12345678", "987654321", "contraseña1234", "contraseña123")
+
+        val hasUpperCase = password.any { it.isUpperCase() }
+        val hasNumber = password.any { it.isDigit() }
 
         return if (password.length >= minLength
             && specialCharacterPattern.matcher(password).find()
+            && hasUpperCase
+            && hasNumber
             && !commonPasswords.contains(password.toLowerCase())
         ) {
             ValidationResult(true)

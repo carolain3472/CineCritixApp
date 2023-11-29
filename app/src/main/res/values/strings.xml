@@ -17,6 +17,8 @@
     <string name="updatecontra">updatecontra</string>
     <string name="updatepass">Actualizar Contraseña</string>
 
+    <string name="cambiarpass">Cambiar Contraseña</string>
+
     //String Resource para iniciar sesión
     <string name="login">Inicia Sesión</string>
     <string name="inicio">Iniciar sesión</string>
@@ -58,14 +60,22 @@
     </string>
 
     <string name="label_email4">
-        Nota: La contraseña debe contener al menos un carácter especial y debe tener un tamaño mayor a 6.
+        Nota: La contraseña debe contener al menos un número, un carácter especial, una mayuscula y debe tener un tamaño mayor a 6.
 
+       </string>
+
+    <string name="label_email5">
+        Recuerda que la contraseña debe contener al menos un número, un carácter especial, una mayuscula y debe tener un tamaño mayor a 6.
        </string>
 
     <string name="codigo">Codigo</string>
     <string name="nuevacontraseña">Nueva Contraseña</string>
 
     <string name="respuestacodigo">Aviso: Recuperación de contraseña</string>
+    <string name="respuestacodigo1">Aviso: Cambiar contraseña</string>
+    <string name="updatepassword">Update Password</string>
+
+    <string name="eliminarCuenta">Eliminar Cuenta</string>
 
 
     <string name="web_client_id">550756448190-8id69udk4qmtg9jkrphm7iq82504jlkt.apps.googleusercontent.com</string>

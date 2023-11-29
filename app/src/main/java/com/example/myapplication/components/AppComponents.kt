@@ -792,7 +792,7 @@ fun CarouselCard() {
 }
 
 @Composable
-fun ClickeableTextComponent(text: String, icon: ImageVector, onTextSelected: () -> Unit, modifier: Modifier = Modifier  ){
+fun ClickeableTextComponent(text: String, icon: ImageVector, onTextSelected: () -> Unit, modifier: Modifier = Modifier, tint: Color= colorResource(id = R.color.sombraBoton) ){
 
     Row ( modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -809,12 +809,15 @@ fun ClickeableTextComponent(text: String, icon: ImageVector, onTextSelected: () 
                 }
                 .padding(16.dp),
 
+
         )
-        
+
         Icon(imageVector = icon, // Reemplaza con el icono que desees
             contentDescription = null,
-            tint = colorResource(id = R.color.sombraBoton)
+            tint = tint
         )
+        
+
 
     }
 }
