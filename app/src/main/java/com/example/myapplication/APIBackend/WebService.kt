@@ -1,6 +1,7 @@
 package com.example.myapplication.APIBackend
 
 import com.example.myapplication.data.request.UserEliminarCuenta
+import com.example.myapplication.data.request.UserEnviarIcono
 import com.example.myapplication.data.response.UploadResponse
 import com.example.myapplication.data.request.UserInfo
 import com.example.myapplication.data.response.UserInfoResponse
@@ -13,6 +14,7 @@ import com.example.myapplication.data.request.UserUpdateContrasena
 import com.example.myapplication.data.request.UserUpdateDatos
 import com.example.myapplication.data.request.UserUpdateImage
 import com.example.myapplication.data.response.UserEliminarCuentaResponse
+import com.example.myapplication.data.response.UserEnviarIconoResponse
 import com.example.myapplication.data.response.UserResetContrasenaEmailResponse
 import com.example.myapplication.data.response.UserResetContrasenaResponse
 import com.example.myapplication.data.response.UserResponse
@@ -38,17 +40,29 @@ interface WebService {
     ): Response<UserLoginResponse>
 
 
-    //@POST("users/update-profile/")
-    //suspend fun uploadImage(
-    //    @Body usuario: UserUpdateImage,
-    //): Response<UserUpdateImageResponse>
-
-    @Multipart
     @POST("users/update-profile/")
     suspend fun uploadImage(
-        @Part("email") email: RequestBody,
-        @Part image: MultipartBody.Part
+        @Body usuario: UserUpdateImage,
     ): Response<UserUpdateImageResponse>
+
+    @POST("users/quitar-profile/")
+    suspend fun deleteImage(
+        @Body usuario: UserInfo,
+    ): Response<UserUpdateImageResponse>
+
+
+    @POST("users/enviar-icono/")
+    suspend fun enviarIcono(
+        @Body usuario: UserEnviarIcono,
+    ): Response<UserEnviarIconoResponse>
+
+
+    //@Multipart
+    //@POST("users/update-profile/")
+    //suspend fun uploadImage(
+    //    @Part("email") email: RequestBody,
+    //    @Part image: MultipartBody.Part
+    //): Response<UserUpdateImageResponse>
 
     @POST("users/obtener-informacion/")
     suspend fun getInfo(
