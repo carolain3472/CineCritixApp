@@ -10,6 +10,7 @@ import com.example.myapplication.data.viewModel.UserViewModel
 import com.example.myapplication.screens.CamaraScreen
 import com.example.myapplication.screens.FavoriteScreen
 import com.example.myapplication.screens.HomeScreen
+import com.example.myapplication.screens.IconoScreen
 import com.example.myapplication.screens.ReviewScreen
 import com.example.myapplication.screens.SearchScreen
 import com.example.myapplication.screens.SettingsScreen
@@ -47,6 +48,10 @@ fun BottomNavGraph(navController: NavHostController, userViewModel: UserViewMode
 
         composable(route = BottomBarScreen.UpdatePassword.route){
             UpdatePasswordScreen(navController = navController,userViewModel=userViewModel)
+        }
+
+        composable(route= BottomBarScreen.ElegirAvatar.route){
+            IconoScreen(navController = navController,userViewModel=userViewModel)
         }
     }
 }

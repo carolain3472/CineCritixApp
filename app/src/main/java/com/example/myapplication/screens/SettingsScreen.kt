@@ -1,6 +1,10 @@
 package com.example.myapplication.screens
 
+import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -73,6 +77,7 @@ import com.example.myapplication.components.ButtonComponent
 import com.example.myapplication.components.ClickeableTextComponent
 import com.example.myapplication.components.HeadingTextComponentBlack
 import com.example.myapplication.components.PasswordTextField
+import com.example.myapplication.data.ImagenURLCallBack
 import com.example.myapplication.data.UIEventLogin
 import com.example.myapplication.data.viewModel.LoginViewModel
 import com.example.myapplication.data.viewModel.RegistroViewModel
@@ -82,14 +87,17 @@ import com.example.myapplication.data.viewModel.UserViewModel
 fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostController = rememberNavController(), userViewModel: UserViewModel = viewModel()){
 
     userViewModel.getInfo()
+    var photoUri: Uri? by remember { mutableStateOf(null) }
 
     var boolEdit by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
+    var showDialogFoto by remember { mutableStateOf(false) }
 
     var nombre = userViewModel.userInfoResponse.value?.body()?.user_nombre
     var apellido = userViewModel.userInfoResponse.value?.body()?.user_apellido
     var correo = userViewModel.userInfoResponse.value?.body()?.user_email
-    var urlImagen = userViewModel.userInfoResponse.value?.body()?.user_profile.toString()
+    var urlImagen by remember { mutableStateOf(userViewModel.userInfoResponse.value?.body()?.user_profile.toString()) }
+    //var urlImagen = userViewModel.userInfoResponse.value?.body()?.user_profile.toString()
     //var urlImagen = "https://storage.googleapis.com/bucket-final-este-si-con-fe/"+imagen
     //var urlImagen = "https://cinecritixbackend.onrender.com/media/"+imagen
 
@@ -103,9 +111,10 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
     var newPassword by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
 
-
-
-
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        //When the user has selected a photo, its URI is returned here
+        photoUri = uri
+    }
 
 
     if (nombre != null && correo != null  && apellido!=null) {
@@ -126,15 +135,42 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
             verticalArrangement = Arrangement.Center) {
 
             items(1){
+
                 ImageWithCircularBorder(urlImagen, 5.dp)
 
+                Box{
+
+                    IconButton(
+                        modifier = Modifier
+                            .background(Color.White),
+                        onClick = {
+                            showDialogFoto = true
+
+                        }
+                    ) {
+                        val imagePainter =
+                            painterResource(id = R.drawable.borrarimagen) // Reemplaza 'tu_imagen' con el nombre de tu imagen en drawables
+                        Icon(
+                            painter = imagePainter,
+                            contentDescription = stringResource(id = R.string.eliminarFoto),
+
+                            )
+                    }
+                }
 
                 //Botones para editar la foto
-                Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceEvenly) {
-                    botonEditarImagen("Tomar Foto", navController,BottomBarScreen.Camara.route )
-                    botonEditarImagen("Elegir Foto", navController,BottomBarScreen.Camara.route )
-                    botonEditarImagen("Elegir Avatar", navController,BottomBarScreen.Camara.route )
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    botonEditarImagen("Tomar Foto", { navController.navigate(BottomBarScreen.Camara.route ) })
+
+                    botonEditarImagen("Elegir Foto", {
+                        launcher.launch( PickVisualMediaRequest(
+                            mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )} )
+
+                    botonEditarImagen("Elegir Avatar",{ navController.navigate(BottomBarScreen.ElegirAvatar.route ) } )
                 }
+                Log.d(TAG3, "URI DE LA FOTO")
+                Log.d(TAG3, photoUri.toString())
 
                 Box{
 
@@ -282,7 +318,7 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
 
 
 
-    if (showDialog) {
+    if (showDialog || showDialogFoto) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -297,23 +333,41 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                     showDialog = false
                 },
                 title = {
-                    HeadingTextComponentBlack(
-                        value = stringResource(id = R.string.eliminarCuenta))
+                    if(showDialog){
+                        HeadingTextComponentBlack(
+                            value = stringResource(id = R.string.eliminarCuenta))
+                    }
+
+                    if(showDialogFoto){
+                        HeadingTextComponentBlack(
+                            value = stringResource(id = R.string.eliminarFoto))
+                    }
+
                 },
 
 
                 text = {
-                    Row {
-                        Icon(
-                            imageVector = Icons.Default.Warning,
-                            contentDescription = null,
-                            tint = colorResource(id = R.color.sombraBoton)
-                        )
 
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Row {
+                            Icon(
+                                imageVector = Icons.Default.Warning,
+                                contentDescription = null,
+                                tint = colorResource(id = R.color.sombraBoton)
+                            )
 
-                        Text(text = "Estas seguro que deseas eliminar tu cuenta")
-                    }
+                            Spacer(modifier = Modifier.width(8.dp))
+
+                            if(showDialog) {
+                                Text(text = "Estas seguro que deseas eliminar tu cuenta")
+                            }
+
+                            if(showDialogFoto) {
+                                Text(text = "Estas seguro que deseas eliminar tu foto de perfil")
+                            }
+
+
+                        }
+
                 },
 
                 confirmButton = {
@@ -321,11 +375,28 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                         onClick = {
                             //Llamar el endpoint para eliminar la cuenta y para cerrar sesión y volver al login
 
-                            Log.d(TAG3,"ELIMINAR CUENTA")
-                            val loginViewModel = RegistroViewModel()
-                            //userViewModel.logout()
-                            userViewModel.eliminarCuenta()
-                            loginViewModel.logout()
+                            if(showDialog) {
+                                Log.d(TAG3, "ELIMINAR CUENTA")
+                                val loginViewModel = RegistroViewModel()
+                                //userViewModel.logout()
+                                userViewModel.eliminarCuenta()
+                                loginViewModel.logout()
+                            }
+
+                            if(showDialogFoto){
+                                Log.d(TAG3, "ELIMINAR FOTO")
+                                userViewModel.deleteImage(
+                                    object : ImagenURLCallBack{
+                                        override fun onImageURLResult(success: String) {
+                                            urlImagen = success
+                                        }
+
+                                    }
+                                )
+
+                                showDialogFoto=false
+                            }
+
                         },
                         colors = androidx.compose.material.ButtonDefaults.buttonColors(
                             backgroundColor = colorResource(id = R.color.abajoBoton),
@@ -344,6 +415,7 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                     androidx.compose.material.Button(
                         onClick = {
                             showDialog = false
+                            showDialogFoto=false
                         },
                         colors = androidx.compose.material.ButtonDefaults.buttonColors(
                             backgroundColor = colorResource(id = R.color.sombraBoton),
@@ -362,10 +434,10 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
 }
 
 @Composable
-fun botonEditarImagen(texto:String ,navController: NavHostController = rememberNavController(), ruta: String){
+fun botonEditarImagen(texto:String , onClick: () -> Unit){
 
 
-    Button(onClick = { navController.navigate(ruta)},
+    Button(onClick = onClick,
         // Ajusta el tamaño del botón según tus necesidades
         colors= ButtonDefaults.buttonColors(Color.Transparent)
     ) {

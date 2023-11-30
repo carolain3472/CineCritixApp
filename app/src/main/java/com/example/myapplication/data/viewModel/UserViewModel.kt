@@ -26,12 +26,16 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.example.myapplication.data.ImageCallBack
+import com.example.myapplication.data.ImagenURLCallBack
+import com.example.myapplication.data.request.UserEnviarIcono
 import com.example.myapplication.data.request.UserUpdateImage
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okio.ByteString
 import retrofit2.Response
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 var TAG2 = "DATOS"
 class UserViewModel : ViewModel() {
@@ -41,6 +45,7 @@ class UserViewModel : ViewModel() {
     val _uiStateupdateContrasena = mutableStateOf(UserUpdateContrasena())
     val _uiStateeliminarCuenta = mutableStateOf(UserEliminarCuenta())
     val _uiStateupdateImage = mutableStateOf(UserUpdateImage())
+    val _uiStateenviarIcono = mutableStateOf(UserEnviarIcono())
 
     fun setNewPassword(pass: String){
         _uiStateupdateContrasena.value = _uiStateupdateContrasena.value.copy(
@@ -48,7 +53,7 @@ class UserViewModel : ViewModel() {
         )
     }
 
-    fun setImage(image: ByteArrayOutputStream){
+    fun setImage(image: String){
         _uiStateupdateImage.value = _uiStateupdateImage.value.copy(
             imagen_seleccionada = image
         )
@@ -75,6 +80,83 @@ class UserViewModel : ViewModel() {
         _userInfoResponse.value = response
     }
 
+    fun enviarIcono(name: String){
+
+        val userEmail = _userLoginResponse.value?.body()?.user_email
+
+        if (userEmail!=null){
+            _uiStateenviarIcono.value = _uiStateenviarIcono.value.copy(
+                email =  userEmail,
+                icono = name
+            )
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = RetrofitClient.webService.enviarIcono(_uiStateenviarIcono.value)
+
+                Log.d(TAG2, response.code().toString())
+                if (response.isSuccessful) {
+                    Log.d(TAG2, response.body().toString())
+                    withContext(Dispatchers.Main) {
+
+                    }
+
+                }else{
+                    Log.d(TAG2, "Error en la carga: ${response.code()}")
+
+                }
+
+
+            }catch (e:Exception){
+                Log.d(TAG2, "Error en la carga: ${e.message}")
+
+            }
+
+        }
+
+
+
+
+
+
+    }
+
+    fun deleteImage(callback: ImagenURLCallBack){
+        val userEmail = _userLoginResponse.value?.body()?.user_email
+
+        if (userEmail!=null){
+            _uiStateInfo.value = _uiStateInfo.value.copy(
+                email =  userEmail
+            )
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = RetrofitClient.webService.deleteImage(_uiStateInfo.value)
+
+                Log.d(TAG2, response.code().toString())
+                if (response.isSuccessful) {
+                    Log.d(TAG2, response.body().toString())
+                    withContext(Dispatchers.Main) {
+                        response.body()?.let { callback.onImageURLResult(it.exito) }
+                    }
+
+                }else{
+                    Log.d(TAG2, "Error en la carga: ${response.code()}")
+
+                }
+
+
+            }catch (e:Exception){
+                Log.d(TAG2, "Error en la carga: ${e.message}")
+
+            }
+
+        }
+    }
+
+    @OptIn(ExperimentalEncodingApi::class)
     fun uploadImage(callback: ImageCallBack, imagePath: Uri?, context:Context) {
 
 
@@ -96,33 +178,47 @@ class UserViewModel : ViewModel() {
             setEmail(email)
         }
 
+        //imagen en base64
+
+        var base64ImageString =""
+
+
 
         val outputStream = ByteArrayOutputStream()
         if (bitmap != null) {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 10, outputStream)
 
         }
+
         val imageBytes: ByteArray = outputStream.toByteArray()
+
+        var base64Image:String = ByteString.of(*imageBytes).base64()
+
+        base64ImageString = String(imageBytes, Charsets.UTF_8)
+        Log.d(TAG, "AQUI IMAGEN EN BYTES 64 STRING")
+        Log.d(TAG, "AQUI IMAGEN EN BYTES 64 STRING")
+        Log.d(TAG,base64Image.length.toString())
+        Log.d(TAG, base64Image)
+
+
 
         val requestFile = RequestBody.create("image/png".toMediaTypeOrNull(), imageBytes)
         val imagePart = MultipartBody.Part.createFormData("image", "image.png", requestFile)
 
-        setImage(outputStream)
+        setImage(base64Image)
 
         val textRequestBody = email?.let { RequestBody.create(MultipartBody.FORM, it) }
 
 
-
         Log.d(TAG2, "IMAGEEEEN")
-        Log.d(TAG2, textRequestBody.toString())
-        Log.d(TAG2, imagePart.toString())
 
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
 
-                val response =
-                    textRequestBody?.let { RetrofitClient.webService.uploadImage(email= it, imagePart) }
+                val response = RetrofitClient.webService.uploadImage(_uiStateupdateImage.value)
+
+
 
                 if (response != null) {
                     Log.d(TAG2, response.code().toString())
@@ -137,7 +233,7 @@ class UserViewModel : ViewModel() {
                     } else {
                         // Manejar errores de la respuesta del servidor
                         if (response != null) {
-                            Log.d(TAG2, "Error responseee: ${response.code()}")
+                            Log.d(TAG2, "Error responseee: ${response.message()}")
                         }
                     }
                 }
@@ -297,8 +393,6 @@ class UserViewModel : ViewModel() {
 
 
         }
-
-
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (userEmail != null) {
