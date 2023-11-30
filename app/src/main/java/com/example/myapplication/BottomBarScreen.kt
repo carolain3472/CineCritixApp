@@ -55,5 +55,11 @@ sealed class BottomBarScreen(
         title = R.string.updatepassword,
         icon = Icons.Default.Build
     )
+
+    object ElegirAvatar: BottomBarScreen(
+        route = "ICONOSCREEN",
+        title = R.string.IconoScreen,
+        icon = Icons.Default.Build
+    )
 }
 
