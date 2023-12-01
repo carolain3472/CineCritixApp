@@ -1,6 +1,5 @@
 package com.example.myapplication.data.viewModel
 
-import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -21,20 +20,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import android.content.ContentResolver
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import com.example.myapplication.data.ImageCallBack
+import com.example.myapplication.data.CallBackInfoUser
 import com.example.myapplication.data.ImagenURLCallBack
 import com.example.myapplication.data.request.UserEnviarIcono
-import com.example.myapplication.data.request.UserUpdateImage
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okio.ByteString
 import retrofit2.Response
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import kotlin.io.encoding.Base64
+import java.io.File
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 var TAG2 = "DATOS"
@@ -44,8 +36,22 @@ class UserViewModel : ViewModel() {
     val _uiStateupdateDatos = mutableStateOf(UserUpdateDatos())
     val _uiStateupdateContrasena = mutableStateOf(UserUpdateContrasena())
     val _uiStateeliminarCuenta = mutableStateOf(UserEliminarCuenta())
-    val _uiStateupdateImage = mutableStateOf(UserUpdateImage())
     val _uiStateenviarIcono = mutableStateOf(UserEnviarIcono())
+
+
+
+
+    fun createTempImageFile(context: Context): File {
+
+        val imageFileName = "temp_image_file"
+        val fileExtension = ".jpg"
+
+        return File(context.cacheDir, "$imageFileName$fileExtension")
+
+    }
+
+
+
 
     fun setNewPassword(pass: String){
         _uiStateupdateContrasena.value = _uiStateupdateContrasena.value.copy(
@@ -53,7 +59,7 @@ class UserViewModel : ViewModel() {
         )
     }
 
-    fun setImage(image: String){
+    /**fun setImage(image: String){
         _uiStateupdateImage.value = _uiStateupdateImage.value.copy(
             imagen_seleccionada = image
         )
@@ -63,7 +69,7 @@ class UserViewModel : ViewModel() {
         _uiStateupdateImage.value = _uiStateupdateImage.value.copy(
             email = email
         )
-    }
+    }*/
 
 
     private val _userLoginResponse = MutableLiveData<Response<UserLoginResponse>?>()
@@ -76,8 +82,17 @@ class UserViewModel : ViewModel() {
     private val _userInfoResponse = MutableLiveData<Response<UserInfoResponse>?>()
     val userInfoResponse: LiveData<Response<UserInfoResponse>?> = _userInfoResponse
 
+
+
     fun setUserInfoResponse(response: Response<UserInfoResponse>?) {
         _userInfoResponse.value = response
+    }
+
+    private val _urlImagen= MutableLiveData<String>()
+    val urlImagen: LiveData<String>  = _urlImagen
+
+    fun setUrlImage(imagenUrl: String ) {
+        _urlImagen.value = imagenUrl
     }
 
     fun enviarIcono(name: String){
@@ -157,110 +172,49 @@ class UserViewModel : ViewModel() {
     }
 
     @OptIn(ExperimentalEncodingApi::class)
-    fun uploadImage(callback: ImageCallBack, imagePath: Uri?, context:Context) {
+    fun uploadImage(callback: ImagenURLCallBack, file: File) {
+        Log.d(TAG, "ACA ESTA EL NOMBRE DEL ARCHIVO")
+        Log.d(TAG, file.length().toString())
 
+        val userEmail: String = _userLoginResponse.value?.body()?.user_email?: ""
 
-        val email = _userLoginResponse.value?.body()?.user_email
-
-        val contentResolver: ContentResolver = context.contentResolver
-        val bytes= imagePath?.let {
-            contentResolver.openInputStream(it).use {
-                it?.readBytes() ?: null
-
-            }
-        }
-
-        val bitmap: Bitmap? = bytes?.let {
-            BitmapFactory.decodeStream(ByteArrayInputStream(it))
-        }
-
-        if (email != null) {
-            setEmail(email)
-        }
-
-        //imagen en base64
-
-        var base64ImageString =""
-
-
-
-        val outputStream = ByteArrayOutputStream()
-        if (bitmap != null) {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 10, outputStream)
-
-        }
-
-        val imageBytes: ByteArray = outputStream.toByteArray()
-
-        var base64Image:String = ByteString.of(*imageBytes).base64()
-
-        base64ImageString = String(imageBytes, Charsets.UTF_8)
-        Log.d(TAG, "AQUI IMAGEN EN BYTES 64 STRING")
-        Log.d(TAG, "AQUI IMAGEN EN BYTES 64 STRING")
-        Log.d(TAG,base64Image.length.toString())
-        Log.d(TAG, base64Image)
-
-
-
-        val requestFile = RequestBody.create("image/png".toMediaTypeOrNull(), imageBytes)
-        val imagePart = MultipartBody.Part.createFormData("image", "image.png", requestFile)
-
-        setImage(base64Image)
-
-        val textRequestBody = email?.let { RequestBody.create(MultipartBody.FORM, it) }
-
-
-        Log.d(TAG2, "IMAGEEEEN")
-
+        val emailRequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), userEmail)
+        val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
+        val imagePart = MultipartBody.Part.createFormData("imagen_seleccionada", file.name, requestFile)
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                val response = RetrofitClient.webService.uploadImage(emailRequestBody, imagePart)
 
-                val response = RetrofitClient.webService.uploadImage(_uiStateupdateImage.value)
-
-
-
-                if (response != null) {
-                    Log.d(TAG2, response.code().toString())
-                }
-
-                if (response != null) {
-                    if (response.isSuccessful) {
-                        val uploadResponse = response.body()
-                        // Manejar la respuesta del servidor segÃºn tus necesidades
-                        Log.d(TAG2, "Se guardo")
-                        Log.d(TAG2, uploadResponse.toString())
-                    } else {
-                        // Manejar errores de la respuesta del servidor
-                        if (response != null) {
-                            Log.d(TAG2, "Error responseee: ${response.message()}")
-                        }
-                    }
-                }
-
-
-                withContext(Dispatchers.Main) {
-                    if (bitmap != null) {
-                        callback.onImageResult(bitmap)
+                Log.d(TAG2, response.code().toString())
+                if (response.isSuccessful) {
+                    Log.d(TAG2, response.body().toString())
+                    withContext(Dispatchers.Main) {
+                        response.body()?.let { callback.onImageURLResult(it.exito) }
                     }
 
+
+
+
+                }else{
+                    Log.d(TAG2, "Error en la carga: ${response.code()}")
+
                 }
 
-            } catch (e: Exception) {
-                // Manejar excepciones
-                Log.d(TAG2, "Error aaa responseee: ${e.message}")
+
+            }catch (e:Exception){
+                Log.d(TAG2, "Error en la carga: ${e.message}")
+
             }
+
         }
-
-
-        // Hacer la solicitud al servidor
 
     }
 
 
 
 
-    fun getInfo(){
+    fun getInfo(callBackInfoUser: CallBackInfoUser){
 
         val userEmail = _userLoginResponse.value?.body()?.user_email
 
@@ -278,6 +232,7 @@ class UserViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     Log.d(TAG2, response.body().toString())
                     withContext(Dispatchers.Main) {
+                        callBackInfoUser.onInfoResult(response)
                         setUserInfoResponse(response)
                     }
 

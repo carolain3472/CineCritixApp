@@ -1,5 +1,6 @@
 package com.example.myapplication.screens
 
+import android.content.ContentResolver
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -77,21 +78,25 @@ import com.example.myapplication.components.ButtonComponent
 import com.example.myapplication.components.ClickeableTextComponent
 import com.example.myapplication.components.HeadingTextComponentBlack
 import com.example.myapplication.components.PasswordTextField
+import com.example.myapplication.data.CallBackInfoUser
 import com.example.myapplication.data.ImagenURLCallBack
 import com.example.myapplication.data.UIEventLogin
+import com.example.myapplication.data.response.UserInfoResponse
 import com.example.myapplication.data.viewModel.LoginViewModel
 import com.example.myapplication.data.viewModel.RegistroViewModel
 import com.example.myapplication.data.viewModel.UserViewModel
+import retrofit2.Response
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 
 @Composable
 fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostController = rememberNavController(), userViewModel: UserViewModel = viewModel()){
 
-    userViewModel.getInfo()
-    var photoUri: Uri? by remember { mutableStateOf(null) }
-
     var boolEdit by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
     var showDialogFoto by remember { mutableStateOf(false) }
+    var showDialogCambios by remember { mutableStateOf(false) }
 
     var nombre = userViewModel.userInfoResponse.value?.body()?.user_nombre
     var apellido = userViewModel.userInfoResponse.value?.body()?.user_apellido
@@ -101,26 +106,54 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
     //var urlImagen = "https://storage.googleapis.com/bucket-final-este-si-con-fe/"+imagen
     //var urlImagen = "https://cinecritixbackend.onrender.com/media/"+imagen
 
+    userViewModel.getInfo(object : CallBackInfoUser {
 
-    var name by remember { mutableStateOf("Nombre") }
-    var lastname by remember { mutableStateOf("Apellido") }
-    var email by remember { mutableStateOf("Correo") }
+        override fun onInfoResult(success: Response<UserInfoResponse>) {
+            nombre = success.body()?.user_nombre
+            apellido = success.body()?.user_apellido
+            correo = success.body()?.user_email
+            urlImagen = success.body()?.user_profile ?: ""
+        }
+
+    })
+
+
+    var name by remember { mutableStateOf(nombre.toString()) }
+    var lastname by remember { mutableStateOf(apellido.toString()) }
+    var email by remember { mutableStateOf(correo.toString()) }
 
     var passwordVisible by remember { mutableStateOf(false) }
     var passwordVisible2 by remember { mutableStateOf(false) }
     var newPassword by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
 
+
+    var photo by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
+    val file = File.createTempFile("imagegaleria", ".jpg")
+    val contentResolver: ContentResolver = context.contentResolver
+
+
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         //When the user has selected a photo, its URI is returned here
-        photoUri = uri
-    }
+        val inputStream: InputStream? = uri?.let { contentResolver.openInputStream(it) }
+        inputStream?.use { input ->
+            FileOutputStream(file).use { output ->
+                input.copyTo(output)
+            }
+        }
 
 
-    if (nombre != null && correo != null  && apellido!=null) {
-        name = nombre
-        email = correo
-        lastname=apellido
+        userViewModel.uploadImage(file= file, callback =
+        object : ImagenURLCallBack {
+            override fun onImageURLResult(success: String) {
+                urlImagen=success
+
+            }
+
+        })
+
     }
 
     Surface(
@@ -165,12 +198,14 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                     botonEditarImagen("Elegir Foto", {
                         launcher.launch( PickVisualMediaRequest(
                             mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )} )
+                        )
+
+
+                    } )
 
                     botonEditarImagen("Elegir Avatar",{ navController.navigate(BottomBarScreen.ElegirAvatar.route ) } )
                 }
-                Log.d(TAG3, "URI DE LA FOTO")
-                Log.d(TAG3, photoUri.toString())
+
 
                 Box{
 
@@ -288,7 +323,9 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                         )
 
                         ButtonComponent(value = "Guardar Cambios",
-                            onButtonClicked = { userViewModel.updateDatos(name, lastname)},
+                            onButtonClicked = {
+                                showDialogCambios = true
+                                boolEdit=false},
                             isEnabled = boolEdit)
 
                         ClickeableTextComponent(
@@ -318,7 +355,7 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
 
 
 
-    if (showDialog || showDialogFoto) {
+    if (showDialog || showDialogFoto || showDialogCambios) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -343,6 +380,11 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                             value = stringResource(id = R.string.eliminarFoto))
                     }
 
+                    if(showDialogCambios){
+                        HeadingTextComponentBlack(
+                            value = "Guardar Cambios")
+                    }
+
                 },
 
 
@@ -358,11 +400,15 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                             Spacer(modifier = Modifier.width(8.dp))
 
                             if(showDialog) {
-                                Text(text = "Estas seguro que deseas eliminar tu cuenta")
+                                Text(text = "¿Estas seguro que deseas eliminar tu cuenta?")
                             }
 
                             if(showDialogFoto) {
-                                Text(text = "Estas seguro que deseas eliminar tu foto de perfil")
+                                Text(text = "¿Estas seguro que deseas eliminar tu foto de perfil?")
+                            }
+                            if(showDialogCambios){
+                                Text(text = "¿Estas seguro que deseas guardar los cambios?")
+
                             }
 
 
@@ -383,19 +429,26 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                                 loginViewModel.logout()
                             }
 
-                            if(showDialogFoto){
+                            if(showDialogFoto) {
                                 Log.d(TAG3, "ELIMINAR FOTO")
                                 userViewModel.deleteImage(
-                                    object : ImagenURLCallBack{
+                                    object : ImagenURLCallBack {
                                         override fun onImageURLResult(success: String) {
                                             urlImagen = success
                                         }
 
                                     }
                                 )
-
-                                showDialogFoto=false
                             }
+
+                                if(showDialogCambios) {
+                                    Log.d(TAG3, "GUARDAR CAMBIOS")
+                                    userViewModel.updateDatos(name, lastname);
+                                }
+
+                                showDialogCambios=false
+                                showDialogFoto=false
+
 
                         },
                         colors = androidx.compose.material.ButtonDefaults.buttonColors(
@@ -416,6 +469,7 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
                         onClick = {
                             showDialog = false
                             showDialogFoto=false
+                            showDialogCambios=false
                         },
                         colors = androidx.compose.material.ButtonDefaults.buttonColors(
                             backgroundColor = colorResource(id = R.color.sombraBoton),
@@ -474,11 +528,9 @@ fun ImageWithCircularBorder(
 ) {
     Box(
         modifier = modifier
-            .background(
-                color = Color.White,
-                shape = CircleShape
-            )
-            .padding(borderWidth)
+            .size(180.dp) // Tamaño del contenedor, puedes ajustarlo según tus necesidades
+            .clip(CircleShape)
+            .border(borderWidth, Color.White, CircleShape)
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -487,6 +539,7 @@ fun ImageWithCircularBorder(
                 .scale(Scale.FILL)
                 .build(),
             contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
             placeholder = painterResource(id = R.drawable.placeholder),
             error = painterResource(id = R.drawable.error)
         )

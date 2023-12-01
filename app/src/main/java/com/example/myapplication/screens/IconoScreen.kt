@@ -107,7 +107,7 @@ fun IconoScreen(navController: NavHostController = rememberNavController(), user
     Scaffold(
         topBar = {
             IconButton(
-                enabled = enableBool,
+                enabled = true,
                 onClick = {
                 navController.navigate(BottomBarScreen.Settings.route)
             }) {
