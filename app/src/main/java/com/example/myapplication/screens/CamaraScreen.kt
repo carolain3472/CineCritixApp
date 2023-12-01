@@ -2,8 +2,6 @@ package com.example.myapplication.screens
 
 import android.Manifest
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.ViewGroup
 import androidx.camera.core.ImageCapture
@@ -14,20 +12,19 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.FloatingActionButtonDefaults
+import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -38,12 +35,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
@@ -51,19 +48,15 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.BottomBarScreen
 import com.example.myapplication.R
 import com.example.myapplication.components.HeadingTextComponentBlack
-import com.example.myapplication.data.ImageCallBack
-import com.example.myapplication.data.LoginCallBack
-import com.example.myapplication.data.response.UserLoginResponse
-import com.example.myapplication.data.viewModel.RegistroViewModel
+import com.example.myapplication.data.ImagenURLCallBack
 import com.example.myapplication.data.viewModel.UserViewModel
-import com.example.myapplication.navigation.CineCritixAppRouter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import retrofit2.Response
 import java.io.File
 import java.util.concurrent.Executor
 
@@ -74,7 +67,7 @@ var imageBitmap: ImageBitmap? = null
 var showDialog = false
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun CamaraScreen(navController: NavHostController, userViewModel: UserViewModel = viewModel()) {
+fun CamaraScreen(navController: NavHostController = rememberNavController(), userViewModel: UserViewModel = viewModel()) {
     val permissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
     val navControllerState = remember { mutableStateOf<NavController?>(navController) }
     val viewModelState = remember { mutableStateOf<UserViewModel?>(userViewModel) }
@@ -90,17 +83,26 @@ fun CamaraScreen(navController: NavHostController, userViewModel: UserViewModel 
         permissionState.launchPermissionRequest()
     }
 
-    Scaffold(modifier = Modifier.fillMaxSize(), floatingActionButton = {
+    Scaffold(modifier = Modifier.fillMaxSize(),
+
+        floatingActionButton = {
         FloatingActionButton(onClick = {
             val executor = ContextCompat.getMainExecutor(context)
             takePicture(cameraController, executor, navControllerState, viewModelState, context)
             Log.d(TAG3, "FILE")
-            //Log.d(TAG3, savedImagePath)
-            //savedImagePath?.let { userViewModel.uploadImage(it) }
 
-            //navController.navigate(BottomBarScreen.Settings.route)
-        }) {
-            Text(text = "Camara!")
+        },
+            backgroundColor = Color.Transparent, // Cambia el color de fondo según tus preferencias
+            contentColor = Color.Black,     // Cambia el color del texto según tus preferencias
+            elevation = FloatingActionButtonDefaults.elevation(8.dp),
+            modifier = Modifier.offset(x = (-145).dp, y = 0.dp)
+
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.lente), // Puedes usar un recurso de icono de cámara aquí
+                contentDescription = "Tomar foto",
+                modifier= Modifier.size(65.dp)
+            )
         }
     }) {
         if (permissionState.status.isGranted) {
@@ -167,8 +169,11 @@ fun CamaraScreen(navController: NavHostController, userViewModel: UserViewModel 
 
 
 private fun takePicture(cameraController: LifecycleCameraController, executor: Executor, navControllerState: MutableState<NavController?>, viewModelState: MutableState<UserViewModel?>, context: Context) {
+
     val file = File.createTempFile("imagentest", ".jpg")
     val outputDirectory = ImageCapture.OutputFileOptions.Builder(file).build()
+
+
     cameraController.takePicture(
         outputDirectory,
         executor,
@@ -178,8 +183,17 @@ private fun takePicture(cameraController: LifecycleCameraController, executor: E
                 Log.d(TAG3, "TAKE FOTO")
                 Log.d(TAG3, "Uri: ${outputFileResults.savedUri}")
 
+                viewModelState.value?.uploadImage(file= file, callback =
+                object : ImagenURLCallBack {
+                    override fun onImageURLResult(success: String) {
+
+                    }
+
+                })
+                navControllerState.value?.navigate(BottomBarScreen.Settings.route)
+
                 //cameraController.unbind()
-                viewModelState.value?.uploadImage(
+                /**viewModelState.value?.uploadImage(
                     object : ImageCallBack {
 
                         override fun onImageResult(success: Bitmap) {
@@ -189,7 +203,7 @@ private fun takePicture(cameraController: LifecycleCameraController, executor: E
 
                     }
                     ,outputFileResults.savedUri, context)
-                navControllerState.value?.navigate(BottomBarScreen.Settings.route)
+                */
 
 
                 //savedImagePath = getRealPathFromUri(context, outputFileResults.savedUri)
@@ -200,6 +214,14 @@ private fun takePicture(cameraController: LifecycleCameraController, executor: E
             }
         },
     )
+
+
+
+
+
+
+
+
 }
 
 ///data/data/com.example.myapplication/cache/imagentest1134430340793179438.jpg
@@ -224,19 +246,9 @@ fun CamaraComposable(
     })
 }
 
+@Preview
 @Composable
-fun ImageView(savedImagePath: String?) {
-    if (savedImagePath != "") {
-        val bitmap = BitmapFactory.decodeFile(savedImagePath)
-        val imageBitmap: ImageBitmap = bitmap.asImageBitmap()
-
-        Image(
-            painter = BitmapPainter(imageBitmap),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize()
-        )
-    } else {
-        // Puedes mostrar un marcador de posición o un mensaje aquí
-    }
+fun camaraPreview(){
+    CamaraScreen()
 
 }
