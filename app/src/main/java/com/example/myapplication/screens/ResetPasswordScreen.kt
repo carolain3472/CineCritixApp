@@ -192,10 +192,12 @@ fun ResetPassword(resetPasswordViewModel: ResetPasswordViewModel = viewModel()){
                             androidx.compose.material3.Text(
                                 text = "Te queda solo un intento para ingresar el código correcto, de lo contrario se inhabilitará tu cuenta por 30 minutos"
                             )
+
                         }else if(code==406){
                             androidx.compose.material3.Text(
                                 text = "Verifica que el código sea el correcto"
                             )
+
                         }else if(code==428){
                             androidx.compose.material3.Text(
                                 text = "Ya no te quedan más intentos para ingresar el código. Vuelve a intentarlo más tarde"
