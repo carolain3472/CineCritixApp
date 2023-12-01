@@ -39,22 +39,33 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.myapplication.data.CallBackInfoUser
+import com.example.myapplication.data.response.UserInfoResponse
 import com.example.myapplication.data.viewModel.RegistroViewModel
 import com.example.myapplication.data.viewModel.UserViewModel
 import com.example.myapplication.navigation.BottomNavGraph
-
+import retrofit2.Response
 
 
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController(), userViewModel: UserViewModel = viewModel() ) {
     //val navController = rememberNavController()
-    userViewModel.getInfo()
+    var nombreUsuario by remember { mutableStateOf(userViewModel.userLoginResponse.value?.body()?.user_nombre)}
+    userViewModel.getInfo(object : CallBackInfoUser {
 
-    val nombreUsuario = userViewModel.userLoginResponse.value?.body()?.user_nombre
+        override fun onInfoResult(success: Response<UserInfoResponse>) {
+            nombreUsuario = success.body()?.user_nombre
+
+        }
+
+    })
+
+
     Scaffold (
         topBar = {
             if (nombreUsuario != null) {
-                TopBar(modifier = Modifier.fillMaxWidth(), nombreUsuario, navController, userViewModel)
+                TopBar(modifier = Modifier.fillMaxWidth(),
+                    nombreUsuario!!, navController, userViewModel)
             }
         },
         bottomBar = { BottomBar(navController = navController) }
