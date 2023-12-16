@@ -875,6 +875,61 @@ fun movieCard(image: Int, onClick: () -> Unit ,titulo: String, descripcion:Strin
 
 }
 
+@Composable
+fun movieCardFavoritas(
+    image: Int,
+    onClick: () -> Unit,
+    titulo: String,
+    onCardClick: () -> Unit // Nuevo parámetro para manejar el clic en la tarjeta
+){
+    Surface(
+        modifier = Modifier
+            .clickable(onClick = { onCardClick() }) // Llamando a onCardClick al hacer clic en la tarjeta
+            .shadow(8.dp, shape = MaterialTheme.shapes.medium)
+            .width(150.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .background(colorResource(R.color.colorPrimary))
+                .fillMaxWidth()
+                .padding(5.dp),
+            horizontalAlignment = Alignment.CenterHorizontally // Centra los elementos horizontalmente
+        ) {
+
+            Image(
+                painter = painterResource(id = image),
+                contentDescription = "Imagen",
+                modifier = Modifier
+                    .height(200.dp) // Establecer una altura fija para las imágenes
+                    .fillMaxWidth()
+                    .shadow(8.dp, shape = MaterialTheme.shapes.medium),
+                contentScale = ContentScale.Crop // Escalar la imagen para ajustarla
+            )
+
+            Spacer(modifier = Modifier.size(10.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = titulo,
+                    color = colorResource(id = R.color.black),
+                    fontSize = 15.sp,
+                    style = TextStyle(fontFamily = FontFamily.Serif),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+        }
+    }
+
+}
+
+
+
 @Preview
 @Composable
 
