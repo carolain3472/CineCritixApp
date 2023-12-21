@@ -1,12 +1,10 @@
 package com.example.myapplication.screens
 
 import android.content.ContentResolver
-import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -24,12 +22,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
@@ -41,7 +37,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,16 +47,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -77,10 +68,8 @@ import com.example.myapplication.R
 import com.example.myapplication.components.ButtonComponent
 import com.example.myapplication.components.ClickeableTextComponent
 import com.example.myapplication.components.HeadingTextComponentBlack
-import com.example.myapplication.components.PasswordTextField
 import com.example.myapplication.data.CallBackInfoUser
 import com.example.myapplication.data.ImagenURLCallBack
-import com.example.myapplication.data.UIEventLogin
 import com.example.myapplication.data.response.UserInfoResponse
 import com.example.myapplication.data.viewModel.LoginViewModel
 import com.example.myapplication.data.viewModel.RegistroViewModel
@@ -102,9 +91,7 @@ fun SettingsScreen(modifier: Modifier = Modifier, navController: NavHostControll
     var apellido = userViewModel.userInfoResponse.value?.body()?.user_apellido
     var correo = userViewModel.userInfoResponse.value?.body()?.user_email
     var urlImagen by remember { mutableStateOf(userViewModel.userInfoResponse.value?.body()?.user_profile.toString()) }
-    //var urlImagen = userViewModel.userInfoResponse.value?.body()?.user_profile.toString()
-    //var urlImagen = "https://storage.googleapis.com/bucket-final-este-si-con-fe/"+imagen
-    //var urlImagen = "https://cinecritixbackend.onrender.com/media/"+imagen
+
 
     userViewModel.getInfo(object : CallBackInfoUser {
 

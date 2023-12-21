@@ -13,6 +13,7 @@ import com.example.myapplication.data.request.UserResetContrasenaEmail
 import com.example.myapplication.data.request.UserUpdateContrasena
 import com.example.myapplication.data.request.UserUpdateDatos
 import com.example.myapplication.data.request.UserUpdateImage
+import com.example.myapplication.data.response.PeliculasGeneroResponse
 import com.example.myapplication.data.response.UserEliminarCuentaResponse
 import com.example.myapplication.data.response.UserEnviarIconoResponse
 import com.example.myapplication.data.response.UserResetContrasenaEmailResponse
@@ -24,9 +25,11 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
 
 interface WebService {
 
@@ -105,6 +108,12 @@ interface WebService {
     suspend fun eliminarCuenta(
         @Body usuario: UserEliminarCuenta
     ): Response<UserEliminarCuentaResponse>
+
+    @GET("peliculas/filtrar_peliculas_genero/{genero_id}/")
+    suspend fun filtrarPeliculasGenero(
+        @Path("genero_id") genero_id: Int
+    ): Response<ArrayList<PeliculasGeneroResponse>>
+
 
 
 
