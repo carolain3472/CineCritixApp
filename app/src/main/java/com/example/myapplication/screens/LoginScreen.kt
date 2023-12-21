@@ -97,7 +97,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel(), loginAPIViewModel:
                 HeadingTextComponent(value = stringResource(id = R.string.login))
                 Spacer(modifier = Modifier.height(20.dp))
 
-                SignInButton(viewModel)
+                //SignInButton(viewModel)
 
                 Spacer(modifier = Modifier.height(20.dp))
 
