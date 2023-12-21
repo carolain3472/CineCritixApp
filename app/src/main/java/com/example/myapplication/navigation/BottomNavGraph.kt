@@ -6,18 +6,20 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.myapplication.BottomBarScreen
+import com.example.myapplication.data.viewModel.MoviesSeriesViewModel
 import com.example.myapplication.data.viewModel.UserViewModel
 import com.example.myapplication.screens.CamaraScreen
 import com.example.myapplication.screens.FavoriteScreen
 import com.example.myapplication.screens.HomeScreen
 import com.example.myapplication.screens.IconoScreen
 import com.example.myapplication.screens.ReviewScreen
+import com.example.myapplication.screens.SearchFilterScreen
 import com.example.myapplication.screens.SearchScreen
 import com.example.myapplication.screens.SettingsScreen
 import com.example.myapplication.screens.UpdatePasswordScreen
 
 @Composable
-fun BottomNavGraph(navController: NavHostController, userViewModel: UserViewModel = viewModel()){
+fun BottomNavGraph(navController: NavHostController, userViewModel: UserViewModel = viewModel(), moviesSeriesViewModel: MoviesSeriesViewModel = viewModel()){
     NavHost(
         navController = navController,
         startDestination = BottomBarScreen.Home.route ){
@@ -39,7 +41,11 @@ fun BottomNavGraph(navController: NavHostController, userViewModel: UserViewMode
         }
 
         composable(route = BottomBarScreen.Search.route){
-            SearchScreen(navController)
+            SearchScreen(navController= navController, moviesSeriesViewModel= moviesSeriesViewModel)
+        }
+
+        composable(route = BottomBarScreen.SearchFilter.route){
+            SearchFilterScreen(navController= navController, moviesSeriesViewModel= moviesSeriesViewModel)
         }
 
         composable(route = BottomBarScreen.Camara.route){
