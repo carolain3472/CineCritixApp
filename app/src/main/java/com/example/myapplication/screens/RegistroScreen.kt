@@ -5,10 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
@@ -36,8 +34,8 @@ import com.example.myapplication.components.ClickableLoginTextComponent
 import com.example.myapplication.components.DividerTextComponent
 import com.example.myapplication.components.NormalTextComponent
 import com.example.myapplication.components.HeadingTextComponent
+import com.example.myapplication.components.HeadingTextComponentBlack
 import com.example.myapplication.components.MyTextField
-import com.example.myapplication.components.NormalTextComponentBlack
 import com.example.myapplication.components.PasswordTextField
 import com.example.myapplication.data.viewModel.RegisterAPIViewModel
 import com.example.myapplication.data.RegisterCallback
@@ -51,6 +49,7 @@ import com.example.myapplication.navigation.Screen
 fun RegistroScreen(loginViewModel: RegistroViewModel = viewModel(), registerViewModel: RegisterAPIViewModel = viewModel()) {
 
     var showErrorDialog by remember { mutableStateOf(false) }
+    var showDialogTerminos by remember { mutableStateOf(false) }
     loginViewModel.allValidationPassed.value = false
 
     Box(modifier= Modifier.fillMaxSize(),
@@ -148,7 +147,8 @@ fun RegistroScreen(loginViewModel: RegistroViewModel = viewModel(), registerView
 
                     CheckboxComponent(value = stringResource(id = R.string.politica),
                         onTextSelected = {
-                            CineCritixAppRouter.navigateTo(Screen.TerminosCondicionesScreen)
+                            showDialogTerminos=true
+                            //CineCritixAppRouter.navigateTo(Screen.TerminosCondicionesScreen)
                         },
 
                         onCheckedChange = {
@@ -195,19 +195,63 @@ fun RegistroScreen(loginViewModel: RegistroViewModel = viewModel(), registerView
         }
 
         //Muestra una ventana emergente si hay algun error al realizar la solicitud
-        if (showErrorDialog) {
+        if (showErrorDialog || showDialogTerminos) {
             AlertDialog(
                 onDismissRequest = {
-                    showErrorDialog = false
+                    showErrorDialog = false;
+                    showDialogTerminos= false
                 },
-                title = { Text(text = "Error") },
+                title = {
+                    if(showErrorDialog){
+                        Text(text = "Error")
+
+                    }
+
+
+                        },
+                text ={
+
+                    LazyColumn(modifier = Modifier.padding(10.dp))
+                    {
+
+                        items(1){
+
+
+
+                            HeadingTextComponentBlack(value = stringResource(id = R.string.terminosCondiciones))
+
+                            androidx.compose.material.Text(text = stringResource(id = R.string.texto_condiciones))
+
+                            Spacer(modifier = Modifier.padding(10.dp))
+
+                            HeadingTextComponentBlack(value = stringResource(id = R.string.politicaPrivacidad))
+
+                            androidx.compose.material.Text(text = stringResource(id = R.string.politicatext))
+
+                            Spacer(modifier = Modifier.padding(10.dp))
+
+
+                            HeadingTextComponentBlack(value = stringResource(id = R.string.autorizacion))
+
+                            androidx.compose.material.Text(text = stringResource(id = R.string.datospersonalestext))
+
+
+
+
+
+                        }
+
+                    }
+
+                },
                 confirmButton = {
                     TextButton(
                         onClick = {
-                            showErrorDialog = false
+                            showErrorDialog = false;
+                            showDialogTerminos= false
                         }
                     ) {
-                        Text(text = "Aceptar")
+                        Text(text = "Cerrar")
                     }
                 }
             )
