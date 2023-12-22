@@ -93,7 +93,23 @@ fun SearchFilterScreen( navController: NavHostController = rememberNavController
                         movieInfo(imageIndex.tituloPelicula,
                             "Pelicula",
                             imageIndex.imagenPelicula,
-                            {})
+                            {
+                                navController.navigate(BottomBarScreen.MovieInfo.route)
+                                moviesSeriesViewModel.setMovieSelected(
+                                    id=imageIndex.id,
+                                    imagenPelicula = imageIndex.imagenPelicula,
+                                    tituloPelicula = imageIndex.tituloPelicula,
+                                    directorPelicula = imageIndex.directorPelicula,
+                                    sipnosisPelicula = imageIndex.sipnosisPelicula,
+                                    duracionPelicula = imageIndex.duracionPelicula,
+                                    fechaEstrenoPelicula = imageIndex.fechaEstrenoPelicula,
+                                    linkPelicula = imageIndex.linkPelicula,
+                                    linkTrailer = imageIndex.linkTrailer,
+                                    genero = imageIndex.genero,
+                                    actores = imageIndex.actores
+                                )
+
+                            })
 
                     }
                 }

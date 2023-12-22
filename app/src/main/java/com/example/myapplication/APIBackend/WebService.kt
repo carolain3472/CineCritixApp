@@ -1,5 +1,6 @@
 package com.example.myapplication.APIBackend
 
+import com.example.myapplication.data.request.PeliculaFavorita
 import com.example.myapplication.data.request.UserEliminarCuenta
 import com.example.myapplication.data.request.UserEnviarIcono
 import com.example.myapplication.data.response.UploadResponse
@@ -13,6 +14,8 @@ import com.example.myapplication.data.request.UserResetContrasenaEmail
 import com.example.myapplication.data.request.UserUpdateContrasena
 import com.example.myapplication.data.request.UserUpdateDatos
 import com.example.myapplication.data.request.UserUpdateImage
+import com.example.myapplication.data.response.ActoresPeliculaResponse
+import com.example.myapplication.data.response.PeliculaFavoritaResponse
 import com.example.myapplication.data.response.PeliculasGeneroResponse
 import com.example.myapplication.data.response.UserEliminarCuentaResponse
 import com.example.myapplication.data.response.UserEnviarIconoResponse
@@ -113,6 +116,21 @@ interface WebService {
     suspend fun filtrarPeliculasGenero(
         @Path("genero_id") genero_id: Int
     ): Response<ArrayList<PeliculasGeneroResponse>>
+
+    @POST("peliculas/agregar_favorita_pelicula/")
+    suspend fun agregarPeliculaFavorita(
+        @Body usuario: PeliculaFavorita
+    ): Response<PeliculaFavoritaResponse>
+
+    @GET("peliculas/listar_peliculas_favoritas_usuario/{usuario_id}/")
+    suspend fun getPeliculasFavoritas(
+        @Path("usuario_id") usuario_id: Int
+    ): Response<ArrayList<PeliculasGeneroResponse>>
+
+    @GET("peliculas/listar_actores_de_pelicula/{pelicula_id}/")
+    suspend fun getActoresPeliculas(
+        @Path("pelicula_id") pelicula_id: Int
+    ): Response<ArrayList<ActoresPeliculaResponse>>
 
 
 

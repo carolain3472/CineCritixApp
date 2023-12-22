@@ -12,6 +12,7 @@ import com.example.myapplication.screens.CamaraScreen
 import com.example.myapplication.screens.FavoriteScreen
 import com.example.myapplication.screens.HomeScreen
 import com.example.myapplication.screens.IconoScreen
+import com.example.myapplication.screens.MovieInfoScreen
 import com.example.myapplication.screens.ReviewScreen
 import com.example.myapplication.screens.SearchFilterScreen
 import com.example.myapplication.screens.SearchScreen
@@ -25,11 +26,11 @@ fun BottomNavGraph(navController: NavHostController, userViewModel: UserViewMode
         startDestination = BottomBarScreen.Home.route ){
 
         composable(route = BottomBarScreen.Home.route){
-            HomeScreen(navController)
+            HomeScreen(navController= navController, moviesSeriesViewModel= moviesSeriesViewModel, userViewModel=userViewModel)
         }
 
         composable(route = BottomBarScreen.Favorite.route){
-            FavoriteScreen(navController)
+            FavoriteScreen(navController= navController, moviesSeriesViewModel= moviesSeriesViewModel, userViewModel=userViewModel)
         }
 
         composable(route = BottomBarScreen.Review.route){
@@ -46,6 +47,10 @@ fun BottomNavGraph(navController: NavHostController, userViewModel: UserViewMode
 
         composable(route = BottomBarScreen.SearchFilter.route){
             SearchFilterScreen(navController= navController, moviesSeriesViewModel= moviesSeriesViewModel)
+        }
+
+        composable(route = BottomBarScreen.MovieInfo.route){
+            MovieInfoScreen(navController= navController, moviesSeriesViewModel= moviesSeriesViewModel, userViewModel=userViewModel)
         }
 
         composable(route = BottomBarScreen.Camara.route){
