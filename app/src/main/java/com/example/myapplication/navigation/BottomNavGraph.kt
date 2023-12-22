@@ -34,7 +34,7 @@ fun BottomNavGraph(navController: NavHostController, userViewModel: UserViewMode
         }
 
         composable(route = BottomBarScreen.Review.route){
-            ReviewScreen(navController)
+            ReviewScreen(navController= navController, moviesSeriesViewModel= moviesSeriesViewModel, userViewModel=userViewModel)
         }
 
         composable(route = BottomBarScreen.Settings.route){

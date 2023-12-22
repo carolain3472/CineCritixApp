@@ -24,6 +24,8 @@ import com.example.myapplication.components.CardSlider
 import com.example.myapplication.components.ClickeableTextComponent
 import com.example.myapplication.components.movieCard
 import com.example.myapplication.data.MoviesCategoriesCallback
+import com.example.myapplication.data.comentariosCallBack
+import com.example.myapplication.data.viewModel.Comentario
 import com.example.myapplication.data.viewModel.MoviesSeriesViewModel
 import com.example.myapplication.data.viewModel.RegistroViewModel
 import com.example.myapplication.data.viewModel.TAG5
@@ -34,6 +36,28 @@ fun HomeScreen(navController: NavHostController = rememberNavController(), movie
 
 
 
+    var id = userViewModel.userInfoResponse.value?.body()?.user_id
+
+    id?.let { moviesSeriesViewModel.setidUser(it) }
+
+    moviesSeriesViewModel.getComentariosUser(
+        object : comentariosCallBack {
+            override fun onComentariosResult(success: MutableList<Comentario>) {
+                moviesSeriesViewModel.setComentariosList(success)
+            }
+
+        }
+    )
+
+    moviesSeriesViewModel.getPeliculasFavoritas(
+        object : MoviesCategoriesCallback {
+            override fun onMovieResult(success: MutableList<com.example.myapplication.data.viewModel.Movie>) {
+                moviesSeriesViewModel.setFavoriteMovies(success)
+                //Log.d(TAG5, moviesSeriesViewModel.getFavoriteMovies().toString() )
+            }
+
+        }
+    )
 
 
     LazyColumn(
