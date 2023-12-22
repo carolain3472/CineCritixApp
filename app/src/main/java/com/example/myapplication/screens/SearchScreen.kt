@@ -138,7 +138,33 @@ fun SearchScreen( navController: NavHostController = rememberNavController(),  m
                         IconButton(
                             modifier = Modifier
                                 .background(colorResource(id = R.color.buscarcard)),
-                            onClick = {  }) {
+                            onClick = {
+
+                                moviesSeriesViewModel.setTextFilter("Todas las peliculas")
+                                //3,7
+                                moviesSeriesViewModel.getPeliculas(
+                                    object : MoviesCategoriesCallback {
+                                        override fun onMovieResult(success: MutableList<Movie>) {
+                                            moviesSeriesViewModel.setMoviesListFilter(success)
+                                            Log.d(TAG5, moviesSeriesViewModel.getMoviesListFilter().toString() )
+                                        }
+
+                                    }
+                                )
+
+                                moviesSeriesViewModel.getPeliculasFavoritas(
+                                    object : MoviesCategoriesCallback {
+                                        override fun onMovieResult(success: MutableList<com.example.myapplication.data.viewModel.Movie>) {
+                                            moviesSeriesViewModel.setFavoriteMovies(success)
+                                            //Log.d(TAG5, moviesSeriesViewModel.getFavoriteMovies().toString() )
+                                        }
+
+                                    }
+                                )
+                                navController.navigate(BottomBarScreen.SearchFilter.route)
+
+
+                            }) {
                             Icon(
                                 imageVector = Icons.Default.Search,
                                 contentDescription = stringResource(id = BottomBarScreen.Search.title)
@@ -148,7 +174,7 @@ fun SearchScreen( navController: NavHostController = rememberNavController(),  m
 
                     ButtonCategories("Acción", navController, onClick = {
                         moviesSeriesViewModel.setTextFilter("Acción")
-                        moviesSeriesViewModel.setIdGenero(9)
+                        moviesSeriesViewModel.setIdGenero(3)
                         //3,7
                         moviesSeriesViewModel.getPeliculasCategoria(
                             object : MoviesCategoriesCallback {
@@ -174,22 +200,173 @@ fun SearchScreen( navController: NavHostController = rememberNavController(),  m
 
                     Spacer(modifier = Modifier.size(10.dp))
 
-                    ButtonCategories("Aventura", navController, onClick = {})
+                    ButtonCategories("Aventura", navController, onClick = {
+                        moviesSeriesViewModel.setTextFilter("Aventura")
+                        moviesSeriesViewModel.setIdGenero(2)
+                        //3,7
+                        moviesSeriesViewModel.getPeliculasCategoria(
+                            object : MoviesCategoriesCallback {
+                                override fun onMovieResult(success: MutableList<Movie>) {
+                                    moviesSeriesViewModel.setMoviesListFilter(success)
+                                    Log.d(TAG5, moviesSeriesViewModel.getMoviesListFilter().toString() )
+                                }
+
+                            }
+                        )
+
+                        moviesSeriesViewModel.getPeliculasFavoritas(
+                            object : MoviesCategoriesCallback {
+                                override fun onMovieResult(success: MutableList<com.example.myapplication.data.viewModel.Movie>) {
+                                    moviesSeriesViewModel.setFavoriteMovies(success)
+                                    //Log.d(TAG5, moviesSeriesViewModel.getFavoriteMovies().toString() )
+                                }
+
+                            }
+                        )
+                        navController.navigate(BottomBarScreen.SearchFilter.route)
+
+                    })
                     Spacer(modifier = Modifier.size(10.dp))
 
-                    ButtonCategories("Romance", navController, onClick = {})
+                    ButtonCategories("Romance", navController, onClick = {
+
+                        moviesSeriesViewModel.setTextFilter("Romance")
+                        moviesSeriesViewModel.setIdGenero(4)
+                        //3,7
+                        moviesSeriesViewModel.getPeliculasCategoria(
+                            object : MoviesCategoriesCallback {
+                                override fun onMovieResult(success: MutableList<Movie>) {
+                                    moviesSeriesViewModel.setMoviesListFilter(success)
+                                    Log.d(TAG5, moviesSeriesViewModel.getMoviesListFilter().toString() )
+                                }
+
+                            }
+                        )
+
+                        moviesSeriesViewModel.getPeliculasFavoritas(
+                            object : MoviesCategoriesCallback {
+                                override fun onMovieResult(success: MutableList<com.example.myapplication.data.viewModel.Movie>) {
+                                    moviesSeriesViewModel.setFavoriteMovies(success)
+                                    //Log.d(TAG5, moviesSeriesViewModel.getFavoriteMovies().toString() )
+                                }
+
+                            }
+                        )
+                        navController.navigate(BottomBarScreen.SearchFilter.route)
+                    })
                     Spacer(modifier = Modifier.size(10.dp))
 
-                    ButtonCategories("Comedia", navController, onClick = {})
+                    ButtonCategories("Comedia", navController, onClick = {
+
+                        moviesSeriesViewModel.setTextFilter("Comedia")
+                        moviesSeriesViewModel.setIdGenero(9)
+                        //3,7
+                        moviesSeriesViewModel.getPeliculasCategoria(
+                            object : MoviesCategoriesCallback {
+                                override fun onMovieResult(success: MutableList<Movie>) {
+                                    moviesSeriesViewModel.setMoviesListFilter(success)
+                                    Log.d(TAG5, moviesSeriesViewModel.getMoviesListFilter().toString() )
+                                }
+
+                            }
+                        )
+
+                        moviesSeriesViewModel.getPeliculasFavoritas(
+                            object : MoviesCategoriesCallback {
+                                override fun onMovieResult(success: MutableList<com.example.myapplication.data.viewModel.Movie>) {
+                                    moviesSeriesViewModel.setFavoriteMovies(success)
+                                    //Log.d(TAG5, moviesSeriesViewModel.getFavoriteMovies().toString() )
+                                }
+
+                            }
+                        )
+                        navController.navigate(BottomBarScreen.SearchFilter.route)
+
+                    })
                     Spacer(modifier = Modifier.size(10.dp))
 
-                    ButtonCategories("Ciencia Ficción", navController, onClick = {})
+                    ButtonCategories("Ciencia Ficción", navController, onClick = {
+
+                        moviesSeriesViewModel.setTextFilter("Ciencia Ficción")
+                        moviesSeriesViewModel.setIdGenero(1)
+                        //3,7
+                        moviesSeriesViewModel.getPeliculasCategoria(
+                            object : MoviesCategoriesCallback {
+                                override fun onMovieResult(success: MutableList<Movie>) {
+                                    moviesSeriesViewModel.setMoviesListFilter(success)
+                                    Log.d(TAG5, moviesSeriesViewModel.getMoviesListFilter().toString() )
+                                }
+
+                            }
+                        )
+
+                        moviesSeriesViewModel.getPeliculasFavoritas(
+                            object : MoviesCategoriesCallback {
+                                override fun onMovieResult(success: MutableList<com.example.myapplication.data.viewModel.Movie>) {
+                                    moviesSeriesViewModel.setFavoriteMovies(success)
+                                    //Log.d(TAG5, moviesSeriesViewModel.getFavoriteMovies().toString() )
+                                }
+
+                            }
+                        )
+                        navController.navigate(BottomBarScreen.SearchFilter.route)
+                    })
                     Spacer(modifier = Modifier.size(10.dp))
 
-                    ButtonCategories("Fantasía", navController, onClick = {})
+                    ButtonCategories("Fantasía", navController, onClick = {
+
+                        moviesSeriesViewModel.setTextFilter("Fantasía")
+                        moviesSeriesViewModel.setIdGenero(5)
+                        //3,7
+                        moviesSeriesViewModel.getPeliculasCategoria(
+                            object : MoviesCategoriesCallback {
+                                override fun onMovieResult(success: MutableList<Movie>) {
+                                    moviesSeriesViewModel.setMoviesListFilter(success)
+                                    Log.d(TAG5, moviesSeriesViewModel.getMoviesListFilter().toString() )
+                                }
+
+                            }
+                        )
+
+                        moviesSeriesViewModel.getPeliculasFavoritas(
+                            object : MoviesCategoriesCallback {
+                                override fun onMovieResult(success: MutableList<com.example.myapplication.data.viewModel.Movie>) {
+                                    moviesSeriesViewModel.setFavoriteMovies(success)
+                                    //Log.d(TAG5, moviesSeriesViewModel.getFavoriteMovies().toString() )
+                                }
+
+                            }
+                        )
+                        navController.navigate(BottomBarScreen.SearchFilter.route)
+
+                    })
                     Spacer(modifier = Modifier.size(10.dp))
 
-                    ButtonCategories("Drama", navController, onClick = {})
+                    ButtonCategories("Drama", navController, onClick = {
+                        moviesSeriesViewModel.setTextFilter("Drama")
+                        moviesSeriesViewModel.setIdGenero(8)
+                        //3,7
+                        moviesSeriesViewModel.getPeliculasCategoria(
+                            object : MoviesCategoriesCallback {
+                                override fun onMovieResult(success: MutableList<Movie>) {
+                                    moviesSeriesViewModel.setMoviesListFilter(success)
+                                    Log.d(TAG5, moviesSeriesViewModel.getMoviesListFilter().toString() )
+                                }
+
+                            }
+                        )
+
+                        moviesSeriesViewModel.getPeliculasFavoritas(
+                            object : MoviesCategoriesCallback {
+                                override fun onMovieResult(success: MutableList<com.example.myapplication.data.viewModel.Movie>) {
+                                    moviesSeriesViewModel.setFavoriteMovies(success)
+                                    //Log.d(TAG5, moviesSeriesViewModel.getFavoriteMovies().toString() )
+                                }
+
+                            }
+                        )
+                        navController.navigate(BottomBarScreen.SearchFilter.route)
+                    })
 
                     Spacer(modifier = Modifier.size(30.dp))
                 }
