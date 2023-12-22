@@ -15,6 +15,7 @@ import com.example.myapplication.data.request.UserUpdateContrasena
 import com.example.myapplication.data.request.UserUpdateDatos
 import com.example.myapplication.data.request.UserUpdateImage
 import com.example.myapplication.data.response.ActoresPeliculaResponse
+import com.example.myapplication.data.response.ComentariosUsuarioResponse
 import com.example.myapplication.data.response.PeliculaFavoritaResponse
 import com.example.myapplication.data.response.PeliculasGeneroResponse
 import com.example.myapplication.data.response.UserEliminarCuentaResponse
@@ -132,8 +133,19 @@ interface WebService {
         @Path("pelicula_id") pelicula_id: Int
     ): Response<ArrayList<ActoresPeliculaResponse>>
 
+    @GET("peliculas/listar_todas_peliculas/")
+    suspend fun getPeliculas(
+    ): Response<ArrayList<PeliculasGeneroResponse>>
 
+    @GET("peliculas/listar_comentarios_peliculas_usuario/{usuario_id}")
+    suspend fun getComentarios(
+        @Path("usuario_id") usuario_id: Int
+    ): Response<ArrayList<ComentariosUsuarioResponse>>
 
+    @GET("peliculas/listar_comentarios_pelicula/{pelicula_id}")
+    suspend fun getComentariosPelicula(
+        @Path("pelicula_id") pelicula_id: Int
+    ): Response<ArrayList<ComentariosUsuarioResponse>>
 
 
 
