@@ -1,5 +1,6 @@
 package com.example.myapplication.APIBackend
 
+import com.example.myapplication.data.request.PeliculaDatos
 import com.example.myapplication.data.request.PeliculaFavorita
 import com.example.myapplication.data.request.UserEliminarCuenta
 import com.example.myapplication.data.request.UserEnviarIcono
@@ -14,6 +15,7 @@ import com.example.myapplication.data.request.UserResetContrasenaEmail
 import com.example.myapplication.data.request.UserUpdateContrasena
 import com.example.myapplication.data.request.UserUpdateDatos
 import com.example.myapplication.data.request.UserUpdateImage
+import com.example.myapplication.data.request.agregarComentarioPelicula
 import com.example.myapplication.data.response.ActoresPeliculaResponse
 import com.example.myapplication.data.response.ComentariosUsuarioResponse
 import com.example.myapplication.data.response.PeliculaFavoritaResponse
@@ -146,6 +148,18 @@ interface WebService {
     suspend fun getComentariosPelicula(
         @Path("pelicula_id") pelicula_id: Int
     ): Response<ArrayList<ComentariosUsuarioResponse>>
+
+    @POST("peliculas/datos-peliculas/")
+    suspend fun getDatosPelicula(
+        @Body usuario: PeliculaDatos
+    ): Response<PeliculasGeneroResponse>
+
+    @POST("peliculas/agregar_comentario_pelicula/")
+    suspend fun setComentario(
+        @Body usuario: agregarComentarioPelicula
+    ): Response<ComentariosUsuarioResponse>
+
+
 
 
 

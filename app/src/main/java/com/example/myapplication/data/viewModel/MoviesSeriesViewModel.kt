@@ -1,21 +1,21 @@
 package com.example.myapplication.data.viewModel
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.APIBackend.RetrofitClient
-import com.example.myapplication.data.CallBackInfoUser
+import com.example.myapplication.data.MovieCallBack
 import com.example.myapplication.data.MoviesCategoriesCallback
 import com.example.myapplication.data.actoresCallBack
 import com.example.myapplication.data.comentariosCallBack
+import com.example.myapplication.data.request.PeliculaDatos
 import com.example.myapplication.data.request.PeliculaFavorita
-import com.example.myapplication.data.request.UserInfo
-import com.google.gson.annotations.SerializedName
+import com.example.myapplication.data.request.agregarComentarioPelicula
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.checkerframework.checker.index.qual.LengthOf
 
 var TAG5 = "MOVIESSERIES"
 
@@ -91,20 +91,53 @@ class MoviesSeriesViewModel : ViewModel() {
     var listActores = mutableStateOf(listActores())
     var listComentarioUser = mutableStateOf(listComentariosUser())
     var listComentariosPelicula = mutableStateOf(listComentariosUser())
+    var agregarComentario = mutableStateOf(agregarComentarioPelicula())
 
+    var requestDatosPelicula = mutableStateOf(PeliculaDatos())
 
     var idUser = mutableStateOf(0)
-    var idPeliculaComentario = mutableStateOf(0)
+
+    var infoMovie = mutableStateOf(MovieSelected())
+
 
 
     var requestPeliculaFavorita = mutableStateOf(PeliculaFavorita())
+
+    fun setInfoMovie(movie: MovieSelected){
+        infoMovie.value = infoMovie.value.copy(
+
+            id = movie.id,
+            imagenPelicula = movie.imagenPelicula,
+            tituloPelicula = movie.tituloPelicula,
+            directorPelicula = movie.directorPelicula,
+            sipnosisPelicula = movie.sipnosisPelicula,
+            duracionPelicula = movie.duracionPelicula,
+            fechaEstrenoPelicula = movie.fechaEstrenoPelicula,
+            linkPelicula = movie.linkPelicula,
+            linkTrailer = movie.linkTrailer,
+            genero = movie.genero,
+            actores = movie.actores
+
+        )
+    }
 
     fun setidUser(id: Int){
         idUser.value = id
     }
 
     fun setidPeliculaComentario(id: Int){
-        idPeliculaComentario.value = id
+        requestDatosPelicula.value = requestDatosPelicula.value.copy(
+            pelicula = id
+        )
+    }
+
+    fun setRequestAddComentario(usuario: Int, pelicula: Int, comentario: String, fecha: String){
+        agregarComentario.value = agregarComentario.value.copy(
+            usuario = usuario,
+            pelicula = pelicula,
+            comentario = comentario,
+            fecha=fecha
+        )
     }
 
     fun setTextFilter(text: String){
@@ -434,6 +467,9 @@ class MoviesSeriesViewModel : ViewModel() {
 
                     withContext(Dispatchers.Main) {
                         var comentarios: MutableList<Comentario> = mutableListOf()
+
+
+
                         response.body()?.forEach { coment ->
                             var comentario = mutableStateOf(
                                 Comentario(
@@ -472,7 +508,7 @@ class MoviesSeriesViewModel : ViewModel() {
                 Log.d(TAG5, response.code().toString())
 
                 if (response.isSuccessful) {
-                    //Log.d(TAG5, response.body().toString())
+                    Log.d(TAG5, response.body().toString())
 
 
                     withContext(Dispatchers.Main) {
@@ -491,6 +527,89 @@ class MoviesSeriesViewModel : ViewModel() {
                             comentarios.add(comentario.value)
                         }
                         callBackComentario.onComentariosResult(comentarios)
+                    }
+
+                }else{
+                    Log.d(TAG5, "Error en la: ${response.code()}")
+                }
+            }catch (e:Exception){
+                Log.d(TAG5, "Error en la carga: ${e.message}")
+            }
+        }
+
+    }
+
+    fun getDatosPelicula(id: Int, movieCallBack: MovieCallBack){
+
+        Log.d(TAG5, idUser.value.toString())
+
+        setidPeliculaComentario(id)
+
+        Log.d(TAG5, "PELICULA ID" +requestDatosPelicula.value.toString())
+
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = RetrofitClient.webService.getDatosPelicula(requestDatosPelicula.value)
+
+                Log.d(TAG5, response.code().toString())
+
+                if (response.isSuccessful) {
+                    Log.d(TAG5, response.body().toString())
+
+
+                    withContext(Dispatchers.Main) {
+                        var movie = response.body()
+                        var movieInfo = mutableStateOf(
+                            movie?.let {
+                                MovieSelected(
+                                    id = it.id,
+                                    imagenPelicula = movie.imagenPelicula,
+                                    tituloPelicula = movie.tituloPelicula,
+                                    directorPelicula = movie.directorPelicula,
+                                    sipnosisPelicula = movie.sipnosisPelicula,
+                                    duracionPelicula = movie.duracionPelicula,
+                                    fechaEstrenoPelicula = movie.fechaEstrenoPelicula,
+                                    linkPelicula = movie.linkPelicula,
+                                    linkTrailer = movie.linkTrailer,
+                                    genero = movie.genero,
+                                    actores = movie.actores
+
+                                )
+                            }
+                        )
+
+
+                        movieInfo.value?.let { movieCallBack.onMovieResult(it) }
+                    }
+
+                }else{
+                    Log.d(TAG5, "Error get datos: ${response.code()}")
+                }
+            }catch (e:Exception){
+                Log.d(TAG5, "Error en la get datos: ${e.message}")
+            }
+        }
+
+    }
+
+    fun setComentario(){
+
+        Log.d(TAG5, idUser.value.toString())
+
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = RetrofitClient.webService.setComentario(agregarComentario.value)
+
+                Log.d(TAG5, response.code().toString())
+
+                if (response.isSuccessful) {
+                    Log.d(TAG5, response.body().toString())
+
+
+                    withContext(Dispatchers.Main) {
+
                     }
 
                 }else{
