@@ -47,6 +47,8 @@ import coil.size.Scale
 import com.example.myapplication.BottomBarScreen
 import com.example.myapplication.R
 import com.example.myapplication.components.HeadingTextComponentBlack
+import com.example.myapplication.data.comentariosCallBack
+import com.example.myapplication.data.viewModel.Comentario
 import com.example.myapplication.data.viewModel.MoviesSeriesViewModel
 
 @Composable
@@ -107,6 +109,15 @@ fun SearchFilterScreen( navController: NavHostController = rememberNavController
                                     linkTrailer = imageIndex.linkTrailer,
                                     genero = imageIndex.genero,
                                     actores = imageIndex.actores
+                                )
+
+                                moviesSeriesViewModel.getComentariosPelicula(
+                                    object: comentariosCallBack{
+                                        override fun onComentariosResult(success: MutableList<Comentario>) {
+                                            moviesSeriesViewModel.setComentariosPeliculaList(success)
+                                        }
+
+                                    }
                                 )
 
                             })
