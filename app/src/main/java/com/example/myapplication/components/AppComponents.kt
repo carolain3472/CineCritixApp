@@ -912,6 +912,28 @@ fun movieCardFavoritas(
 
 }
 
+@Composable
+fun GradientButton(text: String = "Añadir Favorito", onButtonClicked: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .background(
+                brush = Brush.horizontalGradient(
+                    colors = listOf(Color(0xFFC4AC2F), Color(0xFFF5D534)) // Tonos dorados
+                ),
+                shape = RoundedCornerShape(12.dp) // Radio de las esquinas
+            )
+
+            .clickable { onButtonClicked() }
+            .padding(8.dp)
+    ) {
+        Text(
+            text = text,
+            color = Color.Black,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+}
+
 
 
 @Preview
