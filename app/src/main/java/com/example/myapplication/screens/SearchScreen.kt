@@ -159,6 +159,16 @@ fun SearchScreen( navController: NavHostController = rememberNavController(),  m
 
                             }
                         )
+
+                        moviesSeriesViewModel.getPeliculasFavoritas(
+                            object : MoviesCategoriesCallback {
+                                override fun onMovieResult(success: MutableList<com.example.myapplication.data.viewModel.Movie>) {
+                                    moviesSeriesViewModel.setFavoriteMovies(success)
+                                    //Log.d(TAG5, moviesSeriesViewModel.getFavoriteMovies().toString() )
+                                }
+
+                            }
+                        )
                         navController.navigate(BottomBarScreen.SearchFilter.route)
                     })
 

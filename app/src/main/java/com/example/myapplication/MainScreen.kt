@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,17 +42,21 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.data.CallBackInfoUser
+import com.example.myapplication.data.MoviesCategoriesCallback
 import com.example.myapplication.data.response.UserInfoResponse
+import com.example.myapplication.data.viewModel.MoviesSeriesViewModel
 import com.example.myapplication.data.viewModel.RegistroViewModel
+import com.example.myapplication.data.viewModel.TAG5
 import com.example.myapplication.data.viewModel.UserViewModel
 import com.example.myapplication.navigation.BottomNavGraph
 import retrofit2.Response
 
 
 @Composable
-fun MainScreen(navController: NavHostController = rememberNavController(), userViewModel: UserViewModel = viewModel() ) {
+fun MainScreen(navController: NavHostController = rememberNavController(), userViewModel: UserViewModel = viewModel(), moviesSeriesViewModel: MoviesSeriesViewModel = viewModel() ) {
     //val navController = rememberNavController()
     var nombreUsuario by remember { mutableStateOf(userViewModel.userLoginResponse.value?.body()?.user_nombre)}
+
     userViewModel.getInfo(object : CallBackInfoUser {
 
         override fun onInfoResult(success: Response<UserInfoResponse>) {
@@ -73,7 +79,7 @@ fun MainScreen(navController: NavHostController = rememberNavController(), userV
         Column(modifier = Modifier.padding(contentPadding)
         ) {
             BottomNavGraph(
-                navController = navController, userViewModel= userViewModel)
+                navController = navController, userViewModel= userViewModel, moviesSeriesViewModel= moviesSeriesViewModel)
 
         }
 
