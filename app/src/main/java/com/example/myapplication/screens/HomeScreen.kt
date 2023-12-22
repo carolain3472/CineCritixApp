@@ -1,5 +1,6 @@
 package com.example.myapplication.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,14 +18,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.R
 import com.example.myapplication.components.CardSlider
 import com.example.myapplication.components.ClickeableTextComponent
 import com.example.myapplication.components.movieCard
+import com.example.myapplication.data.MoviesCategoriesCallback
+import com.example.myapplication.data.viewModel.MoviesSeriesViewModel
 import com.example.myapplication.data.viewModel.RegistroViewModel
+import com.example.myapplication.data.viewModel.TAG5
+import com.example.myapplication.data.viewModel.UserViewModel
 
 @Composable
-fun HomeScreen( navController: NavHostController, loginViewModel: RegistroViewModel = viewModel()){
+fun HomeScreen(navController: NavHostController = rememberNavController(), moviesSeriesViewModel: MoviesSeriesViewModel = viewModel(), userViewModel: UserViewModel = viewModel() ){
+
+
+
+
 
     LazyColumn(
             modifier = Modifier

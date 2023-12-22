@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.APIBackend.RetrofitClient
 import com.example.myapplication.data.CallBackInfoUser
 import com.example.myapplication.data.MoviesCategoriesCallback
+import com.example.myapplication.data.actoresCallBack
+import com.example.myapplication.data.request.PeliculaFavorita
 import com.example.myapplication.data.request.UserInfo
 import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +27,18 @@ data class listMoviesInfo(
     var moviesList: MutableList<Movie> = mutableListOf()
 )
 
+data class listActores(
+    var actorlist: MutableList<Actor> = mutableListOf()
+)
+
+data class Actor(
+    var id: Int ,
+    var imagenActor: String,
+    var nombreActor: String,
+    var nacimientoActor: String,
+    var biografiaActor: String,
+    var nacionalidadActor: String,
+)
 
 data class Movie(
     var id: Int ,
@@ -40,10 +54,36 @@ data class Movie(
     val actores: List<Int>
 )
 
+data class MovieSelected(
+    var id: Int=0,
+    var imagenPelicula: String="",
+    var tituloPelicula: String="",
+    var directorPelicula: String="",
+    var sipnosisPelicula: String="",
+    var duracionPelicula: Int=0,
+    var fechaEstrenoPelicula: String="",
+    var linkPelicula: String="",
+    var linkTrailer: String="",
+    val genero: List<Int> = listOf(),
+    val actores: List<Int> =listOf()
+)
+
 class MoviesSeriesViewModel : ViewModel() {
 
     val _uiStateFilter = mutableStateOf(infoFilter())
     val listMoviesFilter = mutableStateOf(listMoviesInfo())
+    val listFavoriteMovie = mutableStateOf(listMoviesInfo())
+    val movieSelected = mutableStateOf(MovieSelected())
+    var listActores = mutableStateOf(listActores())
+
+    var idUser = mutableStateOf(0)
+
+
+    var requestPeliculaFavorita = mutableStateOf(PeliculaFavorita())
+
+    fun setidUser(id: Int){
+        idUser.value = id
+    }
 
     fun setTextFilter(text: String){
         _uiStateFilter.value = _uiStateFilter.value.copy(
@@ -75,6 +115,73 @@ class MoviesSeriesViewModel : ViewModel() {
         return listMoviesFilter.value.moviesList
     }
 
+
+    fun setMovieSelected(
+        id:Int,
+        imagenPelicula: String,
+        tituloPelicula: String,
+        directorPelicula: String,
+        sipnosisPelicula: String,
+        duracionPelicula: Int,
+        fechaEstrenoPelicula: String,
+        linkPelicula: String,
+        linkTrailer: String,
+        genero: List<Int>,
+        actores: List<Int>
+
+    ){
+        movieSelected.value = movieSelected.value.copy(
+            id=id,
+            imagenPelicula=imagenPelicula,
+            tituloPelicula=tituloPelicula,
+            directorPelicula=directorPelicula,
+            sipnosisPelicula=sipnosisPelicula,
+            duracionPelicula=duracionPelicula,
+            fechaEstrenoPelicula=fechaEstrenoPelicula,
+            linkPelicula=linkPelicula,
+            linkTrailer=linkTrailer,
+            genero=genero,
+            actores=actores
+
+        )
+    }
+
+    fun getMovieSelected():MovieSelected {
+        return movieSelected.value
+    }
+
+    fun setRequestPeliculaFavorita(pelicula:Int, user:Int, fecha:String){
+        requestPeliculaFavorita.value = requestPeliculaFavorita.value.copy(
+            usuario=user,
+            pelicula=pelicula,
+            fecha=fecha
+        )
+    }
+
+    fun setFavoriteMovies(list: MutableList<Movie>){
+        listFavoriteMovie.value = listFavoriteMovie.value.copy(
+            moviesList = list
+        )
+    }
+
+    fun getFavoriteMovies():MutableList<Movie> {
+        return listFavoriteMovie.value.moviesList
+    }
+
+    fun setActoresList(list: MutableList<Actor>){
+        listActores.value = listActores.value.copy(
+            actorlist = list
+        )
+    }
+
+    fun getActoresList():MutableList<Actor> {
+        return listActores.value.actorlist
+    }
+
+
+
+
+
     fun getPeliculasCategoria(callBackInfoUser: MoviesCategoriesCallback){
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -84,12 +191,9 @@ class MoviesSeriesViewModel : ViewModel() {
                 Log.d(TAG5, response.code().toString())
                 if (response.isSuccessful) {
                     //Log.d(TAG5, response.body().toString())
-
                     withContext(Dispatchers.Main) {
-
                         var movies: MutableList<Movie> = mutableListOf()
                         response.body()?.forEach { movie ->
-
                             var movie = mutableStateOf(
                                 Movie(
                                     id = movie.id,
@@ -105,28 +209,128 @@ class MoviesSeriesViewModel : ViewModel() {
                                     actores = movie.actores
                                 )
                             )
-
                             movies.add(movie.value)
-
                         }
                         callBackInfoUser.onMovieResult(movies)
-
                     }
 
+                }else{
+                    Log.d(TAG5, "Error en la: ${response.code()}")
+                }
+            }catch (e:Exception){
+                Log.d(TAG5, "Error en la carga: ${e.message}")
+            }
+        }
+    }
+
+
+    fun setPeliculaFavorita(){
+
+
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = RetrofitClient.webService.agregarPeliculaFavorita(requestPeliculaFavorita.value)
+
+                Log.d(TAG5, response.code().toString())
+                if (response.isSuccessful) {
+                    Log.d(TAG5, response.body().toString())
 
 
                 }else{
                     Log.d(TAG5, "Error en la: ${response.code()}")
-
                 }
-
-
             }catch (e:Exception){
                 Log.d(TAG5, "Error en la carga: ${e.message}")
-
             }
-
         }
     }
+
+    fun getPeliculasFavoritas(callBackInfoUser: MoviesCategoriesCallback){
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = RetrofitClient.webService.getPeliculasFavoritas(usuario_id = idUser.value)
+
+                Log.d(TAG5, response.code().toString())
+
+                if (response.isSuccessful) {
+                    //Log.d(TAG5, response.body().toString())
+                    withContext(Dispatchers.Main) {
+                        var movies: MutableList<Movie> = mutableListOf()
+                        response.body()?.forEach { movie ->
+                            var movie = mutableStateOf(
+                                Movie(
+                                    id = movie.id,
+                                    imagenPelicula = movie.imagenPelicula,
+                                    tituloPelicula = movie.tituloPelicula,
+                                    directorPelicula = movie.directorPelicula,
+                                    sipnosisPelicula = movie.sipnosisPelicula,
+                                    duracionPelicula = movie.duracionPelicula,
+                                    fechaEstrenoPelicula = movie.fechaEstrenoPelicula,
+                                    linkPelicula = movie.linkPelicula,
+                                    linkTrailer = movie.linkTrailer,
+                                    genero = movie.genero,
+                                    actores = movie.actores
+                                )
+                            )
+                            movies.add(movie.value)
+                        }
+                        callBackInfoUser.onMovieResult(movies)
+                    }
+
+                }else{
+                    Log.d(TAG5, "Error en la: ${response.code()}")
+                }
+            }catch (e:Exception){
+                Log.d(TAG5, "Error en la carga: ${e.message}")
+            }
+        }
+    }
+
+
+    fun getActoresPelicula(callBackActores: actoresCallBack){
+
+        Log.d(TAG5, getMovieSelected().id.toString())
+
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = RetrofitClient.webService.getActoresPeliculas(pelicula_id = getMovieSelected().id)
+
+                Log.d(TAG5, response.code().toString())
+
+                if (response.isSuccessful) {
+                    //Log.d(TAG5, response.body().toString())
+
+
+                    withContext(Dispatchers.Main) {
+                        var actores: MutableList<Actor> = mutableListOf()
+                        response.body()?.forEach { actor ->
+                            var actor = mutableStateOf(
+                                Actor(
+                                    id = actor.id,
+                                    imagenActor = actor.imagenActor,
+                                    nombreActor= actor.nombreActor,
+                                    nacimientoActor= actor.nacimientoActor,
+                                    biografiaActor= actor.biografiaActor,
+                                    nacionalidadActor= actor.nacionalidadActor,
+                                )
+                            )
+                            actores.add(actor.value)
+                        }
+                        callBackActores.onActoresResult(actores)
+                    }
+
+                }else{
+                    Log.d(TAG5, "Error en la: ${response.code()}")
+                }
+            }catch (e:Exception){
+                Log.d(TAG5, "Error en la carga: ${e.message}")
+            }
+        }
+
+    }
+
 
 }
