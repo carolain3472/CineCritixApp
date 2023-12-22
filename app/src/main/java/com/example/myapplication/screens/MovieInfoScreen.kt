@@ -22,12 +22,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,11 +50,14 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.size.Scale
 import com.example.myapplication.R
+import com.example.myapplication.components.GradientButton
 import com.example.myapplication.components.HeadingTextComponentBlack
 import com.example.myapplication.data.CallBackInfoUser
 import com.example.myapplication.data.actoresCallBack
+import com.example.myapplication.data.comentariosCallBack
 import com.example.myapplication.data.response.UserInfoResponse
 import com.example.myapplication.data.viewModel.Actor
+import com.example.myapplication.data.viewModel.Comentario
 import com.example.myapplication.data.viewModel.MoviesSeriesViewModel
 import com.example.myapplication.data.viewModel.TAG5
 import com.example.myapplication.data.viewModel.UserViewModel
@@ -63,6 +69,9 @@ import retrofit2.Response
 fun MovieInfoScreen(navController: NavHostController = rememberNavController(), moviesSeriesViewModel: MoviesSeriesViewModel = viewModel(), userViewModel: UserViewModel = viewModel() ){
 
     var id = userViewModel.userInfoResponse.value?.body()?.user_id
+    var comentario by remember {
+        mutableStateOf("")
+    }
 
     userViewModel.getInfo(object : CallBackInfoUser {
 
@@ -72,6 +81,17 @@ fun MovieInfoScreen(navController: NavHostController = rememberNavController(), 
         }
 
     })
+
+    moviesSeriesViewModel.getComentariosPelicula(
+        object: comentariosCallBack {
+            override fun onComentariosResult(success: MutableList<Comentario>) {
+                moviesSeriesViewModel.setComentariosPeliculaList(success)
+            }
+
+        }
+    )
+
+    var comentarios by remember { mutableStateOf(moviesSeriesViewModel.getComentariosPeliculaList()) }
 
     Scaffold(
         topBar = {
@@ -200,25 +220,75 @@ fun MovieInfoScreen(navController: NavHostController = rememberNavController(), 
 
                 Spacer(modifier = Modifier.size(10.dp))
 
-                Button(onClick={
-
+                GradientButton {
                     id?.let { it1 ->
+
                         moviesSeriesViewModel.setRequestPeliculaFavorita(
                             pelicula = moviesSeriesViewModel.getMovieSelected().id,
                             user = it1,
-                            fecha= "2023-09-09"
-
+                            fecha = "2023-09-09"
                         )
                     }
-
                     moviesSeriesViewModel.setPeliculaFavorita()
+                }
 
-                })
-                {
+                HeadingTextComponentBlack(value = "Comentarios")
 
-                    Text(text = "Añadir Favorito")
+                Spacer(modifier = Modifier.size(15.dp))
+
+                Text(text="Añadir un comentario")
+
+                Spacer(modifier = Modifier.size(15.dp))
+
+                Row(modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center){
+
+                    OutlinedTextField(
+                        value = comentario  ,
+                        onValueChange = {comentario = it},
+                        modifier = Modifier.height(60.dp).width(250.dp)
+                    )
+
+                    Spacer(modifier = Modifier.size(8.dp))
+
+                    GradientButton(text= "Enviar", {
+
+                        id?.let { moviesSeriesViewModel.setRequestAddComentario( usuario= it, pelicula = moviesSeriesViewModel.getMovieSelected().id, comentario= comentario,   fecha = "2023-12-22") }
+                        moviesSeriesViewModel.setComentario()
+                        comentario = ""
+
+                    })
 
                 }
+
+                val listaComentarios = moviesSeriesViewModel.getComentariosPeliculaList()
+
+                Log.d(TAG5, "COMENTARIOS: " +comentarios.toString())
+
+                Column(modifier = Modifier.padding(top = 8.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.Start
+
+                ) {
+                    listaComentarios.forEach { coment ->
+                        
+                        Text(text = coment.fechaComentario)
+                        
+                        Text(
+                            text = coment.comentario,
+                            overflow = TextOverflow.Ellipsis, // Agrega puntos suspensivos (...) si el texto es demasiado largo
+                            modifier = Modifier
+                                .background(Color.LightGray)
+                                .padding(horizontal = 12.dp, vertical = 6.dp)
+                                .clip(RoundedCornerShape(4.dp))
+                                .widthIn(max = 200.dp) // Puedes ajustar el ancho máximo aquí
+                        )
+                        Spacer(modifier = Modifier.width(8.dp)) // Espaciado entre los actores
+                    }
+                }
+
+
 
 
 
